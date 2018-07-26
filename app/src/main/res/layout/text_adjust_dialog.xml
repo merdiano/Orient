@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/lineTop"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:background="@color/text_tertiary_dark"/>
+    <SeekBar
+        android:id="@+id/font_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/lineTop"
+        android:thumbTint="@color/colorPrimaryDark"
+        android:progressTint="@color/colorPrimaryDark"
+        android:layout_marginHorizontal="@dimen/spacing_large"
+        android:paddingStart="34dp"
+        android:min="100"
+        android:max="200"
+
+        android:paddingEnd="34dp"
+        android:layout_marginTop="20dp" />
+    <View
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/brSmall"
+        android:background="@drawable/ic_sun"
+        android:layout_alignStart="@+id/font_size"
+        android:layout_below="@+id/font_size"/>
+
+    <SeekBar
+        android:id="@+id/brightness"
+        android:max="255"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/brSmall"
+        android:layout_toEndOf="@+id/brSmall"
+        android:thumbTint="@color/colorPrimaryDark"
+        android:progressTint="@color/colorPrimaryDark"
+        android:layout_toStartOf="@id/brLarge"/>
+
+
+    <View
+        android:id="@+id/brLarge"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignEnd="@+id/font_size"
+        android:layout_alignTop="@+id/brightness"
+        android:background="@drawable/ic_sun" />
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/lineBottom"
+        android:layout_height="1px"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/brightness"
+        android:layout_marginTop="20dp"
+        android:background="@color/text_tertiary_dark"/>
+
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/nightmode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/lineBottom"
+        android:layout_marginHorizontal="@dimen/spacing_large"
+
+        android:layout_marginVertical="@dimen/spacing_normal"
+        android:checked="false"
+        android:text="Night mode"
+        android:theme="@style/SCBSwitch"
+        android:thumbTint="@color/colorPrimaryDark" />
+</RelativeLayout>

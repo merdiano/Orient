@@ -1,0 +1,44 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.versions = [
+            'compileSdk'    : 27,
+            'targetSdk'     : 25,
+            'buildTools'    : '27.0.3',
+            'butterknife'   : '8.8.1',
+            'glide'         : '4.6.1',
+            'kotlin'        : '1.2.51',
+            'retrofit'      : '2.3.0',
+            'supportLibrary': '27.1.1',
+            'greendao'      : '3.2.2',
+            'dagger'        : '2.16',
+            'firebase'      : '16.0.0',
+            'googleGms'     : '4.0.0'
+    ]
+
+    repositories {
+        google()
+        jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath "org.greenrobot:greendao-gradle-plugin:${versions.greendao}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "com.google.gms:google-services:${versions.googleGms}"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

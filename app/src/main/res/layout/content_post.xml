@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.tps.orientnews.ui.PostActivity"
+    android:background="@color/light_grey"
+    android:id="@+id/post_nested_scroll"
+    tools:showIn="@layout/activity_post">
+    <GridLayout android:layout_width="match_parent"
+        android:layout_columnSpan="3"
+        android:columnCount="3"
+        android:rowCount="6"
+        android:useDefaultMargins="false"
+        android:transitionGroup="false"
+        android:clipToPadding="false"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content"
+        tools:ignore="WebViewLayout">
+        <TextView
+            android:id="@+id/shot_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="3"
+            android:paddingBottom="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_room_for_fab"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_normal"
+            android:textAppearance="@style/TextAppearance.DribbbleShotTitle"
+            tools:text="Post title" />
+        <WebView android:id="@+id/web_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="3"
+            android:breakStrategy="high_quality"
+            android:paddingEnd="@dimen/padding_normal"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_normal"
+            android:background="@android:color/transparent"
+            android:textAppearance="@style/TextAppearance.DribbbleShotDescription"
+            android:textColorHighlight="@color/dribbble_link_highlight"
+            android:textColorLink="@color/dribbble_links"/>
+        <LinearLayout
+            android:id="@+id/shot_actions"
+            android:layout_columnSpan="3"
+            android:layout_width="match_parent"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/spacing_large"
+            android:paddingEnd="@dimen/padding_normal"
+            android:clipToPadding="false">
+
+            <Button
+                android:id="@+id/shot_like_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/avd_likes"
+                tools:text="33 likes"
+                style="@style/Widget.Plaid.InlineActionButton" />
+
+            <Button
+                android:id="@+id/shot_view_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/avd_views"
+                android:background="@null"
+                tools:text="33 views"
+                style="@style/Widget.Plaid.InlineActionButton" />
+
+            <Button
+                android:id="@+id/shot_share_action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:drawableTop="@drawable/avd_share"
+                android:text="@string/share"
+                style="@style/Widget.Plaid.InlineActionButton" />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/player_name"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_width="wrap_content"
+            android:layout_gravity="end"
+            android:clickable="false"
+            android:gravity="top"
+            android:paddingTop="@dimen/spacing_normal"
+            android:textAppearance="@style/TextAppearance.CommentAuthor"
+            tools:text="—Nick B" />
+        <ImageView
+            android:id="@+id/player_avatar"
+            android:layout_width="@dimen/avatar_bounds"
+            android:layout_height="@dimen/avatar_bounds"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="@dimen/avatar_margin"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_rowSpan="2"
+            android:padding="@dimen/avatar_padding"
+            android:textColorLink="@color/dribbble_links"
+            android:textColorHighlight="@color/dribbble"
+            android:stateListAnimator="@animator/raise"
+            android:src="@drawable/avatar_placeholder"
+            android:foreground="@drawable/avatar_ripple" />
+        <!-- can't use a marginEnd on the above image view as it pushes in the whole column so instead
+             add another column to contain the below space element -->
+        <Space
+            android:layout_width="@dimen/avatar_margin"
+            android:layout_rowSpan="2" />
+
+        <TextView
+            android:id="@+id/shot_time_ago"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textAppearance="@style/TextAppearance.CommentTimestamp"
+            tools:text="3 hours ago" />
+        <!-- GridLayout seems to ignore layout_marginBottom so add another row with a space -->
+        <Space
+            android:layout_height="@dimen/avatar_margin"
+            android:layout_columnSpan="3" />
+
+    </GridLayout>
+
+</android.support.v4.widget.NestedScrollView>
