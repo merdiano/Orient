@@ -41,6 +41,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -157,13 +158,26 @@ public class PostActivity extends BaseActivity {
 //        webDesc.getSettings().setBuiltInZoomControls(true);
 //        webDesc.getSettings().setDisplayZoomControls(false);
         webDesc.setWebViewClient(new WebViewClient() {
-                                    @Override
-                                    public void onPageFinished(WebView webView, String url) {
-                                        super.onPageFinished(webView, url);
-                                        webView.getParent().requestLayout();
-                                    }
-                                }
-        );
+            @Override
+            public void onPageFinished(WebView webView, String url) {
+                super.onPageFinished(webView, url);
+                webView.getParent().requestLayout();
+            }
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, request.getUrl());
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+                return true;
+            }
+        });
 
     }
 
