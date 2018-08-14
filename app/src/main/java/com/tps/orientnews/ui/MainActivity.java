@@ -1,7 +1,9 @@
 package com.tps.orientnews.ui;
 
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Build;
@@ -9,16 +11,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.transition.TransitionManager;
-import android.support.v4.content.ContextCompat;
+
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Annotation;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
+
 import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
@@ -30,30 +27,30 @@ import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.tps.orientnews.DataLoadingSubject;
-import com.tps.orientnews.DataManager;
+import com.mindorks.placeholderview.PlaceHolderView;
+
 import com.tps.orientnews.R;
+import com.tps.orientnews.data.NetworkState;
+import com.tps.orientnews.data.Status;
 import com.tps.orientnews.injectors.PerActivity;
-import com.tps.orientnews.models.Category;
-import com.tps.orientnews.models.OrientPost;
-import com.tps.orientnews.ui.adapters.FeedAdapter;
-import com.tps.orientnews.ui.adapters.FilterAdapter;
+import com.tps.orientnews.injectors.ViewModelFactory;
+import com.tps.orientnews.room.Category;
+import com.tps.orientnews.room.Post;
+
+import com.tps.orientnews.ui.adapters.PostListAdapter;
+import com.tps.orientnews.ui.views.DrawyerCategoryItem;
+import com.tps.orientnews.ui.views.DrawyerItemCallback;
+import com.tps.orientnews.ui.views.DrawyerMenuItem;
 import com.tps.orientnews.ui.views.GridItemDividerDecoration;
 import com.tps.orientnews.ui.views.HomeGridItemAnimator;
 import com.tps.orientnews.utils.NetworkUtils;
+import com.tps.orientnews.viewmodels.MainActivityViewModel;
+import com.tps.orientnews.viewmodels.MainViewModel;
 
 
 import java.util.List;
@@ -62,49 +59,151 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.AndroidInjection;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-@PerActivity
-public class MainActivity extends BaseActivity {
 
-    @Inject
-    protected FilterAdapter filterAdapter;
+@PerActivity
+public class MainActivity extends BaseActivity implements DrawyerItemCallback{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    @BindView(R.id.filters)
-    RecyclerView filtersList;
+    @BindView(R.id.drawerView)
+    PlaceHolderView mDrawyerView;
     @BindView(android.R.id.empty)
     ProgressBar loading;
     @BindView(R.id.grid) RecyclerView grid;
     @Nullable
     @BindView(R.id.no_connection)
     ImageView noConnection;
-    private TextView noFiltersEmptyText;
-    private boolean connected = false;
-    private boolean monitoringConnectivity = false;
+
+    private static final int RC_SEARCH = 0;
+    private static final String KEY_SOURCE ="SOURCE_KEY";
     @Inject
-    FeedAdapter adapter;
+    PostListAdapter adapter;
     @Inject
-    RecyclerViewPreloader<OrientPost> shotPreloader;
+    RecyclerViewPreloader<Post> shotPreloader;
+
     @Inject
-    DataManager dataManager;
-    private Disposable internetDisposable;
+    Observable<Boolean> connectionStatus;
+    Disposable internetDisposable;
+    private DrawyerMenuItem allPosts;
+    @Inject
+    ViewModelFactory<MainActivityViewModel> viewModelFactory;
+    private MainActivityViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setTheme(R.style.OrientTheme);
         super.onCreate(savedInstanceState);
+//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);//for vector drawables
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        setupDrawyer();
         //todo check this on fullscreen
+
+        viewModel = ViewModelProviders.of(MainActivity.this,viewModelFactory)
+                .get(MainActivityViewModel.class);
+
+//        adapter.setHasStableIds(true);
+        grid.setAdapter(adapter);
+//        grid.setHasFixedSize(true);
+        grid.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
+        grid.addOnScrollListener(shotPreloader);
+        grid.setItemAnimator(new HomeGridItemAnimator());
+
+//        swipeContainer.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+//                viewModel.loadMore();
+//            }
+//
+//
+//        });
+
+        NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
+
+        viewModel.getCategories().observe(this,this::fillDrawyer);
+        viewModel.postList.observe(this, posts -> {
+//           if(posts.size()!=0)
+              adapter.submitList(posts);
+//            swipeContainer.setRefreshing(false);
+//            isLoading = false;
+//            checkEmptyState();
+            if(posts.size() != 0)
+                loading.setVisibility(View.GONE);
+            else
+                loading.setVisibility(View.GONE);
+        });
+        viewModel.networkState.observe(this, networkState -> {
+            adapter.setNetworkState(networkState);
+            int postCount = adapter.getItemCount();
+
+            if(networkState.status == Status.FAILED){
+                if(internetDisposable == null)
+                    internetDisposable = connectionStatus.subscribe(this::connectionChanged);
+                if(postCount == 1){
+                    loading.setVisibility(View.GONE);
+
+                    if (noConnection == null) {
+                        final ViewStub stub = findViewById(R.id.stub_no_connection);
+                        noConnection = (ImageView) stub.inflate();
+                    }
+                    final AnimatedVectorDrawable avd;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        avd = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_no_connection);
+                        if (noConnection != null && avd != null) {
+                            noConnection.setImageDrawable(avd);
+                            avd.start();
+                        }
+                    }
+                }
+            }
+        });
+
+        //val subreddit = savedInstanceState?.getString(KEY_SUBREDDIT) ?: DEFAULT_SUBREDDIT
+        if(savedInstanceState != null){
+            int source = savedInstanceState.getInt(KEY_SOURCE);
+            viewModel.loadPosts(source);
+        }
+        else
+            viewModel.loadPosts(-1);
+        subscribeToSource();
+
+    }
+
+    private void subscribeToSource(){
+        FirebaseMessaging.getInstance().subscribeToTopic("news")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (!task.isSuccessful()) {
+                            Log.d("Firebase", "Subscribe failed");
+                        }
+                        Log.d("Firebase", "Subscribed");
+                    }
+
+                });
+    }
+
+    private void setupDrawyer(){
+        allPosts = new DrawyerMenuItem(getApplicationContext(),R.string.all_categories);
+        allPosts.setItemCallback(MainActivity.this);
+        DrawyerMenuItem favorites = new DrawyerMenuItem(getApplicationContext(),R.string.favorite_posts);
+        DrawyerMenuItem settings = new DrawyerMenuItem(getApplicationContext(),R.string.action_settings);
+        favorites.setItemCallback(MainActivity.this);
+        settings.setItemCallback(MainActivity.this);
+        mDrawyerView.addView(allPosts);
+        mDrawyerView.addView(favorites);
+        mDrawyerView.addView(settings);
+        mDrawyerView.setHasFixedSize(true);
+        //mDrawyerView.setItemAnimator(new FilterAdapter.FilterAnimator());
+        mDrawyerView.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
         drawer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -114,195 +213,80 @@ public class MainActivity extends BaseActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        filtersList.setHasFixedSize(true);
-        filtersList.setAdapter(filterAdapter);
-        filtersList.setItemAnimator(new FilterAdapter.FilterAnimator());
-        filterAdapter.registerFilterChangedCallback(filtersChangedCallbacks);
-        dataManager.registerDataCallback(loadingCallbacks);
-        dataManager.loadCategories();
-        grid.setAdapter(adapter);
-        grid.addOnScrollListener(new InfiniteScrolListener(
-                (LinearLayoutManager) grid.getLayoutManager(),adapter.dataLoading) {
-            @Override
-            void onLoadMore() {
-                dataManager.loadAllDataSources();
-            }
-        });
-        grid.setHasFixedSize(true);
-        grid.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
-        filtersList.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
-        grid.addOnScrollListener(shotPreloader);
-        grid.setItemAnimator(new HomeGridItemAnimator());
-
-        NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
     }
 
-    DataLoadingSubject.DataLoadingCallbacks loadingCallbacks = new DataLoadingSubject.DataLoadingCallbacks() {
-        @Override
-        public void onCategoriesLoaded(List<Category> categories)
-        {
-            filterAdapter.setItems(categories);
-            dataManager.setupPageIndexes();
-            dataManager.loadAllDataSources();
-            checkEmptyState();
+    private void fillDrawyer(List<Category> categories){
+        for(Category cat : categories){
+            DrawyerCategoryItem categoryItem = new DrawyerCategoryItem(getApplicationContext(),cat);
+            categoryItem.setItemCallback(MainActivity.this);
+            mDrawyerView.addViewAfter(allPosts,categoryItem);
         }
+    }
 
-        @Override
-        public void onPostsLoaded(List<OrientPost> posts) {
-            adapter.addAndResort(posts);
-            checkEmptyState();
-        }
-    };
-
-    FilterAdapter.FiltersChangedCallbacks filtersChangedCallbacks = new FilterAdapter.FiltersChangedCallbacks() {
-        @Override
-        public void onFiltersChanged(Category changedFilter) {
-            dataManager.updateCategory(changedFilter);
-
-            if (!changedFilter.active) {
-                adapter.removeDataSource(changedFilter);
-            }
-            dataManager.onFilterChanged(changedFilter);
-            checkEmptyState();
-        }
-    };
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SOURCE, viewModel.currentSource());
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkConnectivity();
         NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
+
     }
-    @Override
-    protected void onDestroy() {
-        dataManager.cancelLoading();
-        super.onDestroy();
-    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        if(monitoringConnectivity)
-        {
+        if(internetDisposable != null)
             internetDisposable.dispose();
-            monitoringConnectivity = false;
-        }
     }
-
-    private void setNoFiltersEmptyTextVisibility(int visibility) {
-        if (visibility == View.VISIBLE) {
-            if (noFiltersEmptyText == null) {
-                // create the no filters empty text
-                ViewStub stub = findViewById(R.id.stub_no_filters);
-                noFiltersEmptyText = (TextView) stub.inflate();
-                SpannedString emptyText = (SpannedString) getText(R.string.no_filters_selected);
-                SpannableStringBuilder ssb = new SpannableStringBuilder(emptyText);
-                final Annotation[] annotations =
-                        emptyText.getSpans(0, emptyText.length(), Annotation.class);
-                if (annotations != null && annotations.length > 0) {
-                    for (int i = 0; i < annotations.length; i++) {
-                        final Annotation annotation = annotations[i];
-                        if (annotation.getKey().equals("src")) {
-                            // image span markup
-                            String name = annotation.getValue();
-                            int id = getResources().getIdentifier(name, null, getPackageName());
-                            if (id == 0) continue;
-                            ssb.setSpan(new ImageSpan(this, id,
-                                            ImageSpan.ALIGN_BASELINE),
-                                    emptyText.getSpanStart(annotation),
-                                    emptyText.getSpanEnd(annotation),
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        } else if (annotation.getKey().equals("foregroundColor")) {
-                            // foreground color span markup
-                            String name = annotation.getValue();
-                            int id = getResources().getIdentifier(name, null, getPackageName());
-                            if (id == 0) continue;
-                            ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, id)),
-                                    emptyText.getSpanStart(annotation),
-                                    emptyText.getSpanEnd(annotation),
-                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.menu_search:
+                View searchMenuView = toolbar.findViewById(R.id.menu_search);
+                Bundle options = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    options = ActivityOptions.makeSceneTransitionAnimation(this, searchMenuView,
+                            getString(R.string.transition_search_back)).toBundle();
                 }
-                noFiltersEmptyText.setText(ssb);
-                noFiltersEmptyText.setOnClickListener(v -> drawer.openDrawer(GravityCompat.END));
-            }
-            noFiltersEmptyText.setVisibility(visibility);
-        } else if (noFiltersEmptyText != null) {
-            noFiltersEmptyText.setVisibility(visibility);
+                startActivityForResult(new Intent(this, SearchActivity.class), RC_SEARCH, options);
+                return true;
+
         }
-
-    }
-    /*check if device connected to internet*/
-    private void checkConnectivity(){
-
-        connected = NetworkUtils.checkConnection(this);
-        if(!connected && (filterAdapter.getItemCount()==0 || adapter.getDataItemCount()==0)){
-            loading.setVisibility(View.GONE);
-            if (noConnection == null) {
-                final ViewStub stub = findViewById(R.id.stub_no_connection);
-                noConnection = (ImageView) stub.inflate();
-            }
-            final AnimatedVectorDrawable avd;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                avd = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_no_connection);
-                if (noConnection != null && avd != null) {
-                    noConnection.setImageDrawable(avd);
-                    avd.start();
-                }
-            }
-
-            /*Reaktive network internede barlar*/
-            InternetObservingSettings settings = InternetObservingSettings
-                    .host("www.orient.tm")
-                    .strategy(new SocketInternetObservingStrategy())
-                    .build();
-            internetDisposable = ReactiveNetwork.observeInternetConnectivity(settings)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(isConnected -> {
-                        if(isConnected)
-                            connectionEstablished();
-                        else
-                            connected = false;
-                    });
-            monitoringConnectivity=true;
-         }
-
+        return super.onOptionsItemSelected(item);
     }
 
-    private void connectionEstablished(){
-        connected = true;
-        if (adapter.getItemCount() != 0) return;
-        runOnUiThread(() -> {
+
+
+    private void connectionChanged(boolean isConnected){
+
+        if(isConnected) {
+
+            runOnUiThread(() -> {
 
                 TransitionManager.beginDelayedTransition(drawer);
-                noConnection.setVisibility(View.GONE);
-                loading.setVisibility(View.VISIBLE);
-                if(filterAdapter.getItemCount()>0)
-                    dataManager.loadAllDataSources();
-                else
-                    dataManager.loadCategories();
-        });
-    }
 
-    void checkEmptyState() {
-        if (adapter.getDataItemCount() == 0) {
-            // if grid is empty check whether we're loading or if no filters are selected
-            if (dataManager.getEnabledSourcesCount() > 0) {
-                if (connected) {
-                    loading.setVisibility(View.VISIBLE);
-                    setNoFiltersEmptyTextVisibility(View.GONE);
+                if (noConnection != null)
+                    noConnection.setVisibility(View.GONE);
+                loading.setVisibility(View.VISIBLE);
+                //todo fill drawyer if it is empty and fetch posts
+                if (mDrawyerView.getViewResolverCount() == 3) {
+                    viewModel.loadCategories(); //todo load cats somehow
+
                 }
-            } else {
-                loading.setVisibility(View.GONE);
-                setNoFiltersEmptyTextVisibility(View.VISIBLE);
-            }
-//            toolbar.setTranslationZ(0f);
-        } else {
-            loading.setVisibility(View.GONE);
-            setNoFiltersEmptyTextVisibility(View.GONE);
+                viewModel.retry();
+
+            });
         }
     }
+
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         if (data == null || resultCode != RESULT_OK
@@ -312,7 +296,7 @@ public class MainActivity extends BaseActivity {
         // orientation change) then scroll it into view.
         final long sharedShotId = data.getLongExtra(PostActivity.RESULT_EXTRA_POST_ID, -1L);
         if (sharedShotId != -1L                                             // returning from a shot
-                && adapter.getDataItemCount() > 0                           // grid populated
+                && adapter.getItemCount() > 0                           // grid populated
                 && grid.findViewHolderForItemId(sharedShotId) == null) {    // view not attached
             final int position = adapter.getItemPosition(sharedShotId);
             if (position == RecyclerView.NO_POSITION) return;
@@ -350,24 +334,39 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+
+        try {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
+        catch (Exception ex){
+            Log.e("Create options menu",ex.getLocalizedMessage());
+        }
         return true;
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void menuItemClicked(int item) {
+        switch (item){
+            case R.string.all_categories:
+                categoryItemClicked(-1);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                break;
+            case R.string.favorite_posts:
+                categoryItemClicked(0);
+                break;
+            case  R.string.action_settings:
+                break;
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void categoryItemClicked(int categoryId) {
+
+        if(viewModel.loadPosts(categoryId)){
+            grid.scrollToPosition(0);
+            drawer.closeDrawers();
+        }
+    }
 
 }

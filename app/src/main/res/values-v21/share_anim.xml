@@ -29,16 +29,16 @@
          the dots are filled while the lines are stroked. I guess I could have used filled
          rectangles but whatever; I drew lines in Sketch :p -->
 
-    <string name="path_share_dots">M18,19m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M6,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M18,5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
-    <string name="path_share_dots_collapsed">M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
-    <string name="path_share_dots_mid_expand">M18,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M18,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M6,5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
+    <string name="path_share_dots" translatable="false">M18,19m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M6,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M18,5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
+    <string name="path_share_dots_collapsed" translatable="false">M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M12,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
+    <string name="path_share_dots_mid_expand" translatable="false">M18,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M18,12m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0 M6,5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0</string>
 
-    <string name="path_share_lines">M6,12L18,19 M18,5L6,12</string>
-    <string name="path_share_lines_collapsed">M12,12L12,12 M12,12L12,12</string>
-    <string name="path_share_lines_mid_expand">M18,12L18,12 M6,5L18,12</string>
+    <string name="path_share_lines" translatable="false">M6,12L18,19 M18,5L6,12</string>
+    <string name="path_share_lines_collapsed" translatable="false">M12,12L12,12 M12,12L12,12</string>
+    <string name="path_share_lines_mid_expand" translatable="false">M18,12L18,12 M6,5L18,12</string>
 
-    <string name="name_dots">dots</string>
-    <string name="name_lines">lines</string>
+    <string name="name_dots" translatable="false">dots</string>
+    <string name="name_lines" translatable="false">lines</string>
 
     <integer name="share_duration_collapse">120</integer>
     <integer name="share_duration_mid_expand">150</integer>

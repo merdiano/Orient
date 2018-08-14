@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ориент</string>
+    <string name="search">Поиск</string>
+    <string name="no_search_results">"По запросу “%1$s” ничего не найдено."</string>
+    <string name="search_hint">Поиск новостей</string>
+    <string name="msg_unsubscribed">Подписка отменена</string>
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+    <string name="action_settings">Настройки</string>
+    <string name="share">Поделиться</string>
+    <string name="no_filters_selected">Фильтры не выбраны, нажмите кнопку фильтра выше (<annotation src="@drawable/ic_filter_small">&#2228;</annotation>) <i><annotation foregroundColor="@color/text_secondary_light"> или проведите по экрану справа </annotation> </i></string>
+    <string name="msg_subscribed">Подписан</string>
+    <string name="msg_subscribe_failed">подписка не удалось</string>
+    <string name="night_mode">Ночной режим</string>
+    <string name="loading_video">Loading video...</string>
+    <string name="all_categories">Все рубрики</string>
+    <string name="favorite_posts">Избранные</string>
+    <plurals name="likes">
+        <item quantity="zero">нет лайков</item>
+        <item quantity="one">%s лайк</item>
+        <item quantity="other">%s лайков</item>
+        <item quantity="few">%s лайков</item>
+        <item quantity="many">%s лайков</item>
+    </plurals>
+    <plurals name="views">
+        <item quantity="zero">нет просмотров</item>
+        <item quantity="one">%s просмотр</item>
+        <item quantity="other">%s просмотр.</item>
+        <item quantity="few">%s просмотр.</item>
+        <item quantity="many">%s просмотр.</item>
+    </plurals>
+    <string name="confirm_save_search">Сохранить</string>
+    <string name="added_to_favs">Добавлено в избранное</string>
+    <string name="share_completed">завершено</string>
+    <string name="removed_from_favs">Удалено из избранного</string>
+</resources>

@@ -1,6 +1,6 @@
 package com.tps.orientnews.api;
 
-import com.tps.orientnews.models.OrientPost;
+import com.tps.orientnews.room.Post;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,14 +14,20 @@ public interface OrientNewsService {
 
     /*Recent posts*/
     @GET("get_recent_posts")
-    Call<PostsWrapper> getRecentPosts(@Query("page") Integer page);
+    Call<PostsResponse> getRecentPosts(@Query("page") Integer page);
     /*Posts related to categroy*/
     @GET("get_category_posts")
-    Call<PostsWrapper> getCategoryPosts(@Query("page") Integer page, @Query("id") Long id);
+    Call<PostsResponse> getCategoryPosts(@Query("page") Integer page, @Query("id") Integer id);/*Recent posts*/
+
+    @GET("get_recent_posts")
+    Call<PostsResponse> getRecentPosts(@Query("page") Integer page, @Query("count") Integer limit);
+    /*Posts related to categroy*/
+    @GET("get_category_posts")
+    Call<PostsResponse> getCategoryPosts(@Query("page") Integer page, @Query("id") Integer id, @Query("count") Integer limit);
 
     /*Get single post given by id*/
     @GET("get_post")
-    Call<OrientPost> getPost(@Query("post_id") long postId);
+    Call<Post> getPost(@Query("post_id") long postId);
 
     //orient.tm/api/core/get_category_index
     @GET("get_category_index")

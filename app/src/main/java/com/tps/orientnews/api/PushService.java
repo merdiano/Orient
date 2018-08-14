@@ -18,8 +18,10 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.tps.orientnews.R;
+import com.tps.orientnews.data.PostRepository;
 import com.tps.orientnews.injectors.DaggerOrientAppComponent;
-import com.tps.orientnews.models.OrientPost;
+
+import com.tps.orientnews.room.Post;
 
 import java.util.Random;
 
@@ -42,7 +44,8 @@ public class PushService extends FirebaseMessagingService {
 
     @Inject
     Gson gson;
-
+    @Inject
+    PostRepository repository;
     @Override
     public void onCreate() {
         AndroidInjection.inject(this);
@@ -73,8 +76,9 @@ public class PushService extends FirebaseMessagingService {
 
         notificationManager.notify(notificationId /* ID of notification */, notificationBuilder.build());
         try {
-            OrientPost post = gson.fromJson(remoteMessage.getData().get("post"), OrientPost.class);
-            post.getTitle();
+            Post post = gson.fromJson(remoteMessage.getData().get("post"), Post.class);
+            if(post!=null)
+                repository.insertPost(post);
         }
         catch (Exception ex){}
     }

@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import com.tps.orientnews.DataManager;
-import com.tps.orientnews.api.OrientNewsService;
-import com.tps.orientnews.models.DaoSession;
-import com.tps.orientnews.ui.adapters.FilterAdapter;
+import com.bumptech.glide.util.ViewPreloadSizeProvider;
+
+import com.tps.orientnews.room.Post;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by merdan on 7/13/18.
@@ -23,5 +23,8 @@ public abstract class BaseActivityModule {
     @Binds
     abstract Context activityContext(Activity activity);
 
-
+    @Provides
+    static ViewPreloadSizeProvider<Post> viewPreloadSizeProvider(){
+        return  new ViewPreloadSizeProvider<>();
+    }
 }

@@ -2,17 +2,12 @@ package com.tps.orientnews.injectors;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.tps.orientnews.DataManager;
-import com.tps.orientnews.api.CategoriesWrapper;
 import com.tps.orientnews.api.OrientNewsService;
-import com.tps.orientnews.api.PostsWrapper;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.OkHttpClient;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

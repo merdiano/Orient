@@ -11,6 +11,6 @@
         android:visible="true"
         app:showAsAction="always"
 
-        android:icon="@drawable/ic_font_white"
+        android:icon="@drawable/ms_font"
         tools:ignore="AppCompatResource" />
 </menu>

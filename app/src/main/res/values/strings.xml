@@ -5,14 +5,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_post">PostActivity</string>
+    <string name="search">Search</string>
+    <string name="title_activity_post" translatable="false">PostActivity</string>
     <!-- transition shared elements -->
     <string name="share">share</string>
-    <string name="no_filters_selected">No filters selected, press the filter button above (<annotation src="@drawable/ic_filter_small">&#2228;</annotation>)\n<i><annotation foregroundColor="@color/text_secondary_light">or swipe from the&#160;right</annotation></i></string>
+    <string name="no_filters_selected">No filters selected, press the filter button above (<annotation src="@drawable/ic_filter_small">&#2228;</annotation>) <i><annotation foregroundColor="@color/text_secondary_light">or swipe from the&#160;right</annotation></i></string>
     <string name="msg_subscribed">Subscribed</string>
     <string name="msg_subscribe_failed">subscription failed</string>
     <string name="msg_unsubscribed">Unsubscribed</string>
-    <string name="web_view_style"><![CDATA[<style type=\'text/css\'>img,video {max-width: 100% important;height:initial;} @font-face {font-family: MyFont;src: url(\\\"file:///android_asset/fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont; text-align: justify;} </style>]]></string>
+    <string name="web_view_style" translatable="false"><![CDATA[<style type=\'text/css\'>img,video {max-width: 100% important;height:initial;} @font-face {font-family: MyFont;src: url(\\\"file:///android_asset/fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont; text-align: justify;} </style>]]></string>
     <!-- dribbble shot screen -->
     <!-- using strings for the number of views/likes as we run them through NumberFormat -->
     <plurals name="likes">
@@ -25,4 +26,29 @@
         <item quantity="one">%s view</item>
         <item quantity="other">%s views</item>
     </plurals>
+
+
+    <!-- transition shared elements -->
+    <string name="transition_shot" translatable="false">shot</string>
+    <string name="transition_shot_title" translatable="false">shot_title</string>
+    <string name="transition_shot_background" translatable="false">shot_background</string>
+    <string name="transition_story_title" translatable="false">story_title</string>
+    <string name="transition_story_title_background" translatable="false">story_title_background</string>
+    <string name="transition_story_background" translatable="false">transition_story_background</string>
+    <string name="transition_dribbble_login" translatable="false">dribbble_login</string>
+    <string name="transition_designer_news_login" translatable="false">transition_designer_news_login</string>
+    <string name="transition_new_designer_news_post" translatable="false">new_designer_news_post</string>
+    <string name="transition_player_avatar" translatable="false">transition_player_avatar</string>
+    <string name="transition_player_background" translatable="false">transition_player_background</string>
+    <string name="transition_search_back" translatable="false">transition_search_back</string>
+    <string name="no_search_results">No results for “%1$s”</string>
+    <string name="search_hint">Search News</string>
+    <string name="confirm_save_search">Save</string>
+    <string name="night_mode">Night mode</string>
+    <string name="loading_video">Loading video...</string>
+    <string name="all_categories">All categories</string>
+    <string name="favorite_posts">Favorite posts</string>
+    <string name="added_to_favs">Added to favorites</string>
+    <string name="share_completed">Shareing complteted</string>
+    <string name="removed_from_favs">Removed from favorites</string>
 </resources>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="OrientTheme"  parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -37,6 +37,18 @@
         <!-- Used to theme dark elements in light themed screens.
              Extend the material dark Action Bar overlay as this contains text styling. -->
     </style>
+    <style name="SearchViewTheme" parent="PlaidDarkOverlay">
+        <item name="colorControlActivated">?android:colorAccent</item>
+        <item name="android:searchViewStyle">@style/Widget.Plaid.SearchView</item>
+    </style>
+
+    <style name="Widget.Plaid.SearchView" parent="android:style/Widget.Material.SearchView">
+        <item name="android:searchIcon">@android:color/transparent</item>
+        <item name="android:searchHintIcon" tools:targetApi="lollipop_mr1">@android:color/transparent</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:submitBackground">@android:color/transparent</item>
+    </style>
+
     <style name="TextAppearance.Filter" parent="@android:style/TextAppearance.Material.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/filter_text</item>
@@ -81,5 +93,10 @@
         <item name="android:background">@drawable/bg_toolbar</item>
         <item name="android:theme">@android:style/ThemeOverlay.Material.Dark</item>
 
+    </style>
+    <style name="ExpandedFabTheme" parent="@android:style/ThemeOverlay.Material.Light">
+        <item name="android:textColorPrimary">@color/dark_icon</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/dark_icon</item>
+        <item name="android:colorControlActivated">@color/dark_icon</item>
     </style>
 </resources>

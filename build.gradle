@@ -10,7 +10,7 @@ buildscript {
             'kotlin'        : '1.2.51',
             'retrofit'      : '2.3.0',
             'supportLibrary': '27.1.1',
-            'greendao'      : '3.2.2',
+//            'greendao'      : '3.2.2',
             'dagger'        : '2.16',
             'firebase'      : '16.0.0',
             'googleGms'     : '4.0.0'
@@ -23,7 +23,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.1'
-        classpath "org.greenrobot:greendao-gradle-plugin:${versions.greendao}"
+//        classpath "org.greenrobot:greendao-gradle-plugin:${versions.greendao}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.google.gms:google-services:${versions.googleGms}"
         // NOTE: Do not place your application dependencies here; they belong

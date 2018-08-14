@@ -29,7 +29,7 @@
 
         <clip-path
             android:name="connection_mask"
-            android:pathData="@string/connection_line_mask_hidden" />
+            android:pathData="M26,159 L26,159 L32,159 L32,159 Z" />
 
         <path
             android:strokeColor="#888888"
@@ -100,9 +100,9 @@
 
     <path
         android:name="button"
-        android:pathData="@string/phone_button"
+        android:pathData="M24,206.5 C24,206.5 27.6392462,206.449997 28,206.449997 C28.3607538,206.449997 32,206.5 32,206.5"
         android:strokeWidth="4"
         android:strokeLineCap="round"
-        android:strokeColor="@color/background_dark"/>
+        android:strokeColor="#ff333333"/>
 
 </vector>

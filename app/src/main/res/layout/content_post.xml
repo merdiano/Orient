@@ -42,43 +42,45 @@
             android:textAppearance="@style/TextAppearance.DribbbleShotDescription"
             android:textColorHighlight="@color/dribbble_link_highlight"
             android:textColorLink="@color/dribbble_links"/>
+
         <LinearLayout
             android:id="@+id/shot_actions"
-            android:layout_columnSpan="3"
             android:layout_width="match_parent"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingTop="@dimen/spacing_large"
-            android:paddingEnd="@dimen/padding_normal"
-            android:clipToPadding="false">
+            android:layout_columnSpan="3"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/spacing_large"
+            android:paddingEnd="1dp"
+            android:paddingStart="1dp"
+            android:paddingTop="@dimen/spacing_large">
 
             <Button
                 android:id="@+id/shot_like_count"
+                style="@style/Widget.Plaid.InlineActionButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/avd_likes"
-                tools:text="33 likes"
-                style="@style/Widget.Plaid.InlineActionButton" />
+                tools:text="33 likes" />
 
             <Button
                 android:id="@+id/shot_view_count"
+                style="@style/Widget.Plaid.InlineActionButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/avd_views"
                 android:background="@null"
-                tools:text="33 views"
-                style="@style/Widget.Plaid.InlineActionButton" />
+                android:drawableTop="@drawable/avd_views"
+                tools:text="33 views" />
 
             <Button
                 android:id="@+id/shot_share_action"
+                style="@style/Widget.Plaid.InlineActionButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_weight="1"
                 android:drawableTop="@drawable/avd_share"
-                android:text="@string/share"
-                style="@style/Widget.Plaid.InlineActionButton" />
+                android:text="@string/share" />
 
         </LinearLayout>
         <TextView

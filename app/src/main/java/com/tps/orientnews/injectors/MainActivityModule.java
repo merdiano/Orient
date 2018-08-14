@@ -1,39 +1,30 @@
 package com.tps.orientnews.injectors;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.arch.paging.PagedList;
 import android.support.v7.app.AppCompatActivity;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
-import com.tps.orientnews.DataManager;
-import com.tps.orientnews.OrientApplication;
-import com.tps.orientnews.api.OrientNewsService;
-import com.tps.orientnews.models.DaoMaster;
-import com.tps.orientnews.models.DaoSession;
-import com.tps.orientnews.models.OrientPost;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
+import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy;
+
+import com.tps.orientnews.room.Post;
 import com.tps.orientnews.ui.MainActivity;
 import com.tps.orientnews.ui.adapters.FeedAdapter;
-import com.tps.orientnews.ui.adapters.FilterAdapter;
-
-import org.greenrobot.greendao.database.Database;
-
-import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import dagger.android.ActivityKey;
-import dagger.android.AndroidInjector;
-import dagger.multibindings.IntoMap;
-import retrofit2.Retrofit;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by merdan on 7/13/18.
  */
-@Module(includes = {BaseActivityModule.class,NetworkModule.class,DatabaseModule.class})
+@Module(includes = {BaseActivityModule.class,NetworkModule.class,DatabaseModule.class,ViewModelModule.class})
 public abstract  class MainActivityModule {
     /**
      * As per the contract specified in {@link BaseActivityModule}; "This must be included in all
@@ -60,17 +51,31 @@ public abstract  class MainActivityModule {
 //    abstract FeedAdapter feedAdapter(FeedAdapter feedAdapter);
 
 
-    @Provides
-    static ViewPreloadSizeProvider<OrientPost> viewPreloadSizeProvider(){
-        return  new ViewPreloadSizeProvider<>();
-    }
+
 
     @Provides
-    static RecyclerViewPreloader<OrientPost> provideRecyclerViewPreloader(
-            Activity activity,FeedAdapter adapter,ViewPreloadSizeProvider<OrientPost> preloadSizeProvider)
+    static RecyclerViewPreloader<Post> provideRecyclerViewPreloader(
+            Activity activity,FeedAdapter adapter,ViewPreloadSizeProvider<Post> preloadSizeProvider)
     {
 
         return new RecyclerViewPreloader<>(activity,adapter,preloadSizeProvider,4);
 
     }
+
+    @Provides
+    static InternetObservingSettings provideInternetSettings(){
+        return InternetObservingSettings
+                .host("www.orient.tm")
+                .strategy(new SocketInternetObservingStrategy())
+                .build();
+    }
+
+    @Provides
+    static Observable<Boolean> provideConnectionState(InternetObservingSettings settings){
+        return ReactiveNetwork.observeInternetConnectivity(settings)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
 }

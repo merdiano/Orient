@@ -1,6 +1,6 @@
 package com.tps.orientnews.utils;
 
-import com.tps.orientnews.models.OrientPost;
+import com.tps.orientnews.room.Post;
 
 import java.util.Comparator;
 
@@ -9,11 +9,11 @@ import java.util.Comparator;
  */
 
 public class PostComperator {
-    public static class OrientItemComparator implements Comparator<OrientPost> {
+    public static class OrientItemComparator implements Comparator<Post> {
 
         @Override
-        public int compare(OrientPost lhs, OrientPost rhs) {
-            return Float.compare(lhs.getId(), rhs.getId());
+        public int compare(Post lhs, Post rhs) {
+            return Float.compare(rhs.id,lhs.id);
         }
     }
 }

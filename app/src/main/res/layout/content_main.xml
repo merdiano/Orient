@@ -7,7 +7,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.tps.orientnews.ui.MainActivity"
     tools:showIn="@layout/app_bar_main">
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,16 +15,21 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/status_bar_back" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/grid"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="outsideOverlay"
-            android:clipToPadding="false"
-            android:paddingTop="?attr/actionBarSize"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            android:elevation="1dp" />
+        <!--<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
+            <!--android:id="@+id/swipeContainer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="outsideOverlay"
+                android:clipToPadding="false"
+                android:paddingTop="?attr/actionBarSize"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:elevation="1dp" />
+        <!--</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>-->
         <ProgressBar
             android:id="@android:id/empty"
             android:layout_width="wrap_content"
@@ -35,13 +39,13 @@
             android:indeterminateTint="?android:colorAccent"
             android:indeterminateTintMode="src_in" />
 
-        <ViewStub
-            android:id="@+id/stub_no_filters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_huge"
-            android:layout_gravity="center"
-            android:layout="@layout/no_filters" />
+        <!--<ViewStub-->
+            <!--android:id="@+id/stub_no_filters"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/spacing_huge"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout="@layout/no_filters" />-->
 
         <ViewStub
             android:id="@+id/stub_no_connection"

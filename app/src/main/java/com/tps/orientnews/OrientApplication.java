@@ -3,6 +3,7 @@ package com.tps.orientnews;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.tps.orientnews.injectors.DaggerOrientAppComponent;
 
@@ -24,6 +25,10 @@ public class OrientApplication extends Application implements HasActivityInjecto
     DispatchingAndroidInjector<Service> dispatchingServiceInjector;
 
     private static OrientApplication instance;
+    static
+    {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     public void onCreate() {

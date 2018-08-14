@@ -11,8 +11,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +26,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -41,15 +40,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
@@ -57,14 +60,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.tps.orientnews.DataManager;
+
 import com.tps.orientnews.OrientPrefs;
 import com.tps.orientnews.R;
 import com.tps.orientnews.injectors.PerActivity;
-import com.tps.orientnews.models.Assets;
-import com.tps.orientnews.models.Image;
-import com.tps.orientnews.models.OrientPost;
-import com.tps.orientnews.models.User;
+
+import com.tps.orientnews.room.Post;
+import com.tps.orientnews.room.PostDao;
+import com.tps.orientnews.room.User;
 import com.tps.orientnews.utils.ColorUtils;
 import com.tps.orientnews.utils.ViewUtils;
 import com.tps.orientnews.utils.glide.GlideApp;
@@ -77,7 +80,6 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.plaidapp.util.glide.GlideUtils;
-import retrofit2.http.POST;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.tps.orientnews.utils.AnimUtils.getFastOutSlowInInterpolator;
@@ -85,6 +87,7 @@ import static com.tps.orientnews.utils.AnimUtils.getFastOutSlowInInterpolator;
 @PerActivity
 public class PostActivity extends BaseActivity {
 
+    private static final int SHARE_REQUEST_CODE = 1233;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.fab)
@@ -95,10 +98,11 @@ public class PostActivity extends BaseActivity {
     TextView title;
     @BindView(R.id.web_description)
     WebView webDesc;
-    @Inject
-    DataManager dataManager;
+
     @Inject
     OrientPrefs orientPrefs;
+    @Inject
+    PostDao postDao;
     public final static String EXTRA_POST = "EXTRA_POST";
     public final static String RESULT_EXTRA_POST_ID = "RESULT_EXTRA_POST_ID";
     private static final float SCRIM_ADJUSTMENT = 0.075f;
@@ -119,7 +123,7 @@ public class PostActivity extends BaseActivity {
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.post_nested_scroll)
     NestedScrollView scrollView;
-    OrientPost post;
+    Post post;
     WebSettings settings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,37 +134,106 @@ public class PostActivity extends BaseActivity {
 
         final Intent intent = getIntent();
         Bundle b = intent.getBundleExtra("bundle");
-        Long postId = b.getLong(EXTRA_POST);
-        post = dataManager.getPost(postId);
-        if(post != null){
-            bindPost(post);
-            nightModeSwitcher(orientPrefs.getNightModePref());
-        }
-        else {//todo retrive it from network
-
-        }
+        int postId = b.getInt(EXTRA_POST);
+        postDao.get(postId).observe(this,this::bindPost);
+        initWebView();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Authorization required", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(post !=null)
+                {
+                    post.isFavorite = !post.isFavorite;
+                    postDao.update(post);
+
+                    Snackbar.make(view, post.isFavorite?
+                            R.string.added_to_favs : R.string.removed_from_favs,
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                //dataManager.updatePost(post);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+    }
+
+    private void initWebView(){
         settings = webDesc.getSettings();
         settings.setTextZoom(orientPrefs.getFontSizePref());
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setAppCachePath(getApplicationContext().getFilesDir().getAbsolutePath() + "/cache");
+//        settings.setDatabaseEnabled(true);
 
+//        settings.setDatabasePath(getApplicationContext().getFilesDir().getAbsolutePath() + "/databases");
         //settings.setLoadWithOverviewMode(true);
         //settings.setUseWideViewPort(true);
 //        webDesc.getSettings().setBuiltInZoomControls(true);
 //        webDesc.getSettings().setDisplayZoomControls(false);
+
+        webDesc.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                super.onShowCustomView(view, callback);
+                if (view instanceof FrameLayout){
+                    FrameLayout frame = (FrameLayout) view;
+                    if (frame.getFocusedChild() instanceof VideoView){
+                        VideoView video = (VideoView) frame.getFocusedChild();
+                        frame.removeView(video);
+                        PostActivity.this.setContentView(video);
+                        video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                PostActivity.this.setContentView(R.layout.activity_post);
+                                WebView wb = PostActivity.this.findViewById(R.id.web_description);
+                                PostActivity.this.initWebView();
+                            }
+                        });
+                        video.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                            @Override
+                            public boolean onError(MediaPlayer mp, int what, int extra) {
+                                return false;
+                            }
+                        });
+                        video.start();
+                    }
+                }
+            }
+        });
         webDesc.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
+
+                String jScript = "javascript:(function() { " +
+                        "var vids = document.getElementsByClassName('wp-video'); "+
+                        "for( var i = 0; i < vids.length; i++ ){" +
+//                            "var video = vids[i].firstchild;" +
+                            "vids[i].replaceWith(vids[i].firstChild);" +
+//                            "vids[i].parentNode.removeChild(vids[i]);" +
+                        "}" +
+                            //"vids[i].removeAttribute('width');" +
+                            //"vids[i].removeAttribute('height');" +
+                            //"vids[i].style.width='100%';}" +
+                        "return document.body.innerHTML;})()";
+
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    webView.evaluateJavascript(jScript, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            value.isEmpty();
+                        }
+                    });
+                } else {
+                    webView.loadUrl(jScript);
+                }
+
                 webView.getParent().requestLayout();
             }
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -178,9 +251,7 @@ public class PostActivity extends BaseActivity {
                 return true;
             }
         });
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.news_menu, menu);
@@ -195,29 +266,29 @@ public class PostActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void bindPost(OrientPost post) {
-        getSupportActionBar().setTitle(post.getTitle());
-        title.setText(post.getTitle());
-        if (!TextUtils.isEmpty(post.getContent())) {
+    private void bindPost(Post post) {
+        if (post == null)return;
+        this.post = post;
+        getSupportActionBar().setTitle(post.title);
+        title.setText(post.title);
+        if (!TextUtils.isEmpty(post.content)) {
 
-            final String content = "<style type='text/css'>@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont; text-align: justify;} img,video {max-width: 100% important;height:initial;}</style>"
-                    +post.getContent();
+//            final String content = "<style type='text/css'>@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont; text-align: justify;} img,video {max-width: 100% important;height:initial;}</style>"
+//                    +post.getContent();
+//
+//                webDesc.loadData(content, "text/html; charset=utf-8", "utf-8");
 
-                webDesc.loadData(content, "text/html; charset=utf-8", "utf-8");
-
-
+            nightModeSwitcher(orientPrefs.getNightModePref());
         } else {
             webDesc.setVisibility(View.GONE);
         }
 
-        Assets img = post.getThumbnail_images();
-        Image mediumImage = img.getMedium();
         GlideApp.with(this)
-                .load(img.getMediumImageId())
+                .load(post.thumbnail_images.mediumUrl)
                 .listener(shotLoadListener)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .priority(Priority.IMMEDIATE)
-                .override(mediumImage.getWidth(), mediumImage.getHeight())
+                .override(post.thumbnail_images.mediumWidh, post.thumbnail_images.mediumHeght)
                 .transition(withCrossFade())
                 .into(imageView);
         NumberFormat nf = NumberFormat.getInstance();
@@ -225,31 +296,33 @@ public class PostActivity extends BaseActivity {
         likeCount.setText(res.getQuantityString(R.plurals.likes,0,
                         nf.format(0)));
         viewCount.setText(
-                res.getQuantityString(R.plurals.views,post.getViews(),
-                        nf.format(post.getViews())));
+                res.getQuantityString(R.plurals.views,post.views,
+                        nf.format(post.views)));
         viewCount.setOnClickListener(v -> ((AnimatedVectorDrawable) viewCount.getCompoundDrawables()[1]).start());
         share.setOnClickListener(v -> {
             ((AnimatedVectorDrawable) share.getCompoundDrawables()[1]).start();
             //new ShareOrientImageTask(PostActivity.this, post).execute();
-            ShareCompat.IntentBuilder.from(PostActivity.this)
+            Intent i = ShareCompat.IntentBuilder.from(PostActivity.this)
                     .setType("text/plain")
-                    .setChooserTitle(post.getTitle())
-                    .setText(post.getUrl())
-                    .startChooser();
+                    .setChooserTitle(post.title)
+                    .setText(post.url)
+                    .createChooserIntent();
+
+            startActivityForResult(i,SHARE_REQUEST_CODE);
         });
-        User author = post.getAuthor();
+        User author = post.author;
         if (author!= null) {
-            playerName.setText(author.fullname().toLowerCase());
+            playerName.setText(author.fullName());
             GlideApp.with(this)
-                    .load(author.getUrl())
+                    .load(author.url)
                     .circleCrop()
                     .placeholder(R.drawable.avatar_placeholder)
                     .override(largeAvatarSize, largeAvatarSize)
                     .transition(withCrossFade())
                     .into(playerAvatar);
 
-            if (post.getDate() != null) {
-                shotTimeAgo.setText(DateUtils.getRelativeTimeSpanString(post.getDate().getTime(),
+            if (post.date != null) {
+                shotTimeAgo.setText(DateUtils.getRelativeTimeSpanString(post.date.getTime(),
                         System.currentTimeMillis(),
                         DateUtils.SECOND_IN_MILLIS).toString().toLowerCase());
             }
@@ -260,11 +333,24 @@ public class PostActivity extends BaseActivity {
         }
     }
     void setResultAndFinish() {
-        final Intent resultData = new Intent();
-        resultData.putExtra(RESULT_EXTRA_POST_ID, post.getId());
-        setResult(RESULT_OK, resultData);
+        if(post!=null){
+            final Intent resultData = new Intent();
+            resultData.putExtra(RESULT_EXTRA_POST_ID, post.id);
+            setResult(RESULT_OK, resultData);
+
+        }
         finish();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == SHARE_REQUEST_CODE){
+            Snackbar.make(webDesc,R.string.share_completed,Snackbar.LENGTH_SHORT)
+            .show();
+        }
+    }
+
     private RequestListener<Drawable> shotLoadListener = new RequestListener<Drawable>() {
         @Override
         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
@@ -362,7 +448,7 @@ public class PostActivity extends BaseActivity {
 
     @Override @TargetApi(Build.VERSION_CODES.M)
     public void onProvideAssistContent(AssistContent outContent) {
-        outContent.setWebUri(Uri.parse(post.getUrl()));
+        outContent.setWebUri(Uri.parse(post.url));
     }
     SeekBar fontSize,brightness;
     SwitchCompat nightmode;
@@ -492,9 +578,9 @@ public class PostActivity extends BaseActivity {
             ((ViewGroup)webDesc.getParent()).setBackgroundColor(Color.BLACK);
             webDesc.setBackgroundColor(Color.BLACK);
             scrollView.setBackgroundColor(Color.BLACK);
-            htmlData = getHtmlData(post.getContent(),"white");
+            htmlData = getHtmlData(post.content,"white");
             //title.setBackgroundColor(Color.BLACK);
-            ((TextView)title).setTextColor(Color.WHITE);
+            title.setTextColor(Color.WHITE);
 //            toolbar.setBackgroundColor(Color.BLACK);
 //            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             toolbarLayout.setContentScrimColor(Color.BLACK);
@@ -507,9 +593,9 @@ public class PostActivity extends BaseActivity {
             ((ViewGroup)webDesc.getParent()).setBackgroundColor(getResources().getColor(R.color.light_grey));
             webDesc.setBackgroundColor(getResources().getColor(R.color.light_grey));
             scrollView.setBackgroundColor(getResources().getColor(R.color.light_grey));
-            htmlData = getHtmlData(post.getContent(),"black");
+            htmlData = getHtmlData(post.content,"black");
             //title.setBackgroundColor(getResources().getColor(R.color.light_grey));
-            ((TextView)title).setTextColor(getResources().getColor(R.color.text_primary_dark));
+            title.setTextColor(getResources().getColor(R.color.text_primary_dark));
 //            toolbar.setBackgroundColor(Color.WHITE);
 //            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black);
 
@@ -525,7 +611,7 @@ public class PostActivity extends BaseActivity {
     }
 
     private String getHtmlData(String bodyHTML,String fontColor) {
-        String head = "<head><style type='text/css'>>@font-face {font-family: MyFont;src: url(\\\"file:///fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont;text-align: justify;font-color:"+fontColor+"} img,video {max-width: 100%;height:initial;}</style></head>";
-        return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
+        String head = "<head><style type='text/css'>@font-face {font-family: MyFont;src: url(\\\"file:///fonts/hermeneus_one_regular.ttf\\\")}body,* {font-family: MyFont;text-align: justify;} img,video {max-width: 100%;height:initial;}</style></head>";
+        return "<html>" + head + "<body><font color='"+fontColor+"'>" + bodyHTML + "</font></body></html>";
     }
 }

@@ -18,6 +18,8 @@ package com.tps.orientnews.utils.glide;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
+import android.support.v4.app.ActivityManagerCompat;
 
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;
@@ -40,7 +42,9 @@ public class PlaidGlideModule extends AppGlideModule {
         // Prefer higher quality thumbnail_images unless we're on a low RAM device
         ActivityManager activityManager =
                 (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        defaultOptions.format(activityManager.isLowRamDevice() ? PREFER_RGB_565 : PREFER_ARGB_8888);
+
+        defaultOptions.format(ActivityManagerCompat.isLowRamDevice(activityManager) ?
+                PREFER_RGB_565 : PREFER_ARGB_8888);
         // Disable hardware bitmaps as they don't play nicely with Palette
         defaultOptions.disallowHardwareConfig();
         builder.setDefaultRequestOptions(defaultOptions);

@@ -44,7 +44,7 @@
         android:layout_toEndOf="@+id/brSmall"
         android:thumbTint="@color/colorPrimaryDark"
         android:progressTint="@color/colorPrimaryDark"
-        android:layout_toStartOf="@id/brLarge"/>
+        android:layout_toStartOf="@+id/brLarge"/>
 
 
     <View
@@ -74,7 +74,7 @@
 
         android:layout_marginVertical="@dimen/spacing_normal"
         android:checked="false"
-        android:text="Night mode"
+        android:text="@string/night_mode"
         android:theme="@style/SCBSwitch"
         android:thumbTint="@color/colorPrimaryDark" />
 </RelativeLayout>

@@ -1,6 +1,6 @@
 package com.tps.orientnews.api;
 
-import com.tps.orientnews.models.Category;
+import com.tps.orientnews.room.Category;
 
 import java.util.List;
 
