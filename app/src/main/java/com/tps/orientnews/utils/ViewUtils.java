@@ -32,7 +32,11 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
+import android.text.Html;
+import android.text.Spannable;
 import android.text.TextPaint;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Property;
 import android.util.TypedValue;
@@ -41,12 +45,43 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tps.orientnews.ui.widgets.GlideImageGetter;
+
 /**
  * Utility methods for working with Views.
  */
 public class ViewUtils {
 
     private ViewUtils() { }
+
+    public static Spannable getSpannableHtmlWithImageGetter(TextView textView,String value){
+        Spannable html;
+        GlideImageGetter imageGetter = new GlideImageGetter(textView.getContext(),textView);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            html = (Spannable) Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
+        } else {
+            html = (Spannable) Html.fromHtml(value, imageGetter, null);
+        }
+        return html;
+    }
+    public static void setClickListenerOnHtmlImageGetter(Spannable html, final Callback callback) {
+        for (final ImageSpan span : html.getSpans(0, html.length(), ImageSpan.class)) {
+            int flags = html.getSpanFlags(span);
+            int start = html.getSpanStart(span);
+            int end = html.getSpanEnd(span);
+
+            html.setSpan(new URLSpan(span.getSource()) {
+                @Override
+                public void onClick(View v) {
+                    callback.onImageClick(span.getSource());
+                }
+            }, start, end, flags);
+        }
+    }
+
+    public interface Callback {
+        void onImageClick(String imageUrl);
+    }
 
     public static int getActionBarSize(@NonNull Context context) {
         TypedValue value = new TypedValue();

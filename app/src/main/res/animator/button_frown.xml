@@ -18,8 +18,8 @@
 <objectAnimator
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:propertyName="pathData"
-    android:valueFrom="@string/phone_button"
-    android:valueTo="@string/phone_button_frown"
+    android:valueFrom="M24,206.5 C24,206.5 27.6392462,206.449997 28,206.449997 C28.3607538,206.449997 32,206.5 32,206.5"
+    android:valueTo="M23.6061137,207.020699 C23.6061137,207.020699 26.2397148,206 28.494994,206 C30.7502732,206 32.753258,207.020699 32.753258,207.020699"
     android:startOffset="1700"
     android:duration="300"
     android:interpolator="@android:interpolator/fast_out_slow_in"

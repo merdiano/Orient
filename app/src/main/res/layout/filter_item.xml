@@ -31,8 +31,7 @@
     android:id="@+id/menuItem"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:theme="@style/PlaidLightOverlay">
+    android:padding="12dp">
 
     <ImageView
         android:id="@+id/filter_icon"

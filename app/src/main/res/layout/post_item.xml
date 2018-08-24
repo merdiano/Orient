@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/padding_normal"
     android:paddingBottom="@dimen/padding_normal"
     android:clipToPadding="false"
-    android:theme="@style/PlaidLightOverlay"
+    android:theme="@style/PlaidOverlay"
     android:foreground="?android:selectableItemBackground"
     android:descendantFocusability="blocksDescendants">
     <ImageView
@@ -33,22 +33,22 @@
         android:layout_toEndOf="@id/news_spacer"
         android:paddingTop="@dimen/spacing_micro"
         android:ellipsize="end"
-        android:textAppearance="@style/TextAppearance.CommentAuthor.DesignerNews"
+        android:textAppearance="@style/TextAppearance.CommentAuthor"
         tools:text="Nick B"
         android:layout_toRightOf="@id/news_spacer" />
-    <TextView
-        android:id="@+id/content_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:paddingStart="@dimen/padding_normal"
-        android:paddingEnd="@dimen/padding_normal"
-        android:paddingBottom="@dimen/padding_normal"
-        android:textAppearance="@style/TextAppearance.Comment"
-        android:textColorHighlight="@color/link_highlight"
-        android:textColorLink="@color/link_highlight"
-        tools:text="Dude do you use sketch? You should totally use sketch. Should designers code??"
-        android:layout_alignParentRight="true" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/content_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/news_spacer"-->
+        <!--android:paddingBottom="@dimen/padding_normal"-->
+        <!--android:paddingEnd="@dimen/padding_normal"-->
+        <!--android:paddingStart="@dimen/padding_normal"-->
+        <!--android:textAppearance="@style/TextAppearance.Comment"-->
+        <!--android:textColorHighlight="@color/link_highlight"-->
+        <!--android:textColorLink="@color/link_highlight"-->
+        <!--tools:text="Dude do you use sketch? You should totally use sketch. Should designers code??" />-->
 
 </RelativeLayout>

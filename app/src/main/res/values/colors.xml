@@ -12,6 +12,8 @@
 
     <color name="text_tertiary_dark">#61000000</color> <!-- 38% -->
     <color name="text_primary_light">#ffffffff</color>
+    <color name="search_background">#ffffffff</color>
+
     <color name="text_secondary_light">#b3ffffff</color> <!-- 70% -->
     <!-- 30% -->
 

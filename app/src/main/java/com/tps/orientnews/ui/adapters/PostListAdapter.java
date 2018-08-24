@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.arch.paging.PagedListAdapter;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.ColorMatrixColorFilter;
@@ -18,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,9 @@ import com.tps.orientnews.data.NetworkState;
 import com.tps.orientnews.injectors.PerActivity;
 import com.tps.orientnews.room.Assets;
 import com.tps.orientnews.room.Post;
+import com.tps.orientnews.ui.DetailActivity;
 import com.tps.orientnews.ui.PostActivity;
+import com.tps.orientnews.ui.SettingsFragment;
 import com.tps.orientnews.ui.views.Divided;
 import com.tps.orientnews.utils.ObservableColorMatrix;
 import com.tps.orientnews.utils.glide.GlideApp;
@@ -48,6 +52,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,12 +71,25 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
     private final ColorDrawable[] shotLoadingPlaceholders;
     private final ViewPreloadSizeProvider<Post> postPreloadSizeProvider;
     private NetworkState networkState = null;
-
+    private float textSize = 0;
     @Inject
-    protected PostListAdapter(Activity host, ViewPreloadSizeProvider<Post> viewPreloadSizeProvider) {
+    protected PostListAdapter(Activity host, ViewPreloadSizeProvider<Post> viewPreloadSizeProvider,
+        @Named("defaultPrefs") SharedPreferences shPrefs) {
         super(DIFF_CALLBACK);
         this.host = host;
         this.postPreloadSizeProvider = viewPreloadSizeProvider;
+
+        if(shPrefs.contains(SettingsFragment.KEY_FONT_SIZE)){
+            String name = shPrefs.getString(SettingsFragment.KEY_FONT_SIZE,"medium_text")+"_title";
+            int id = host.getResources()
+                    .getIdentifier(name, "dimen",
+                            host.getPackageName());
+
+            //textView.setTextSize(getResources().getDimension(R.dimen.textsize));todo for various ekranlar
+            textSize = host.getResources().getDimension(id);
+
+        }
+
         final TypedArray a = host.obtainStyledAttributes(R.styleable.OrientFeed);
         final int loadingColorArrayId =
                 a.getResourceId(R.styleable.OrientFeed_shotLoadingPlaceholderColors, 0);
@@ -206,13 +224,14 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
     private PostListAdapter.OrientNewsHolder createOrientNewsHolder(ViewGroup parent) {
         final PostListAdapter.OrientNewsHolder holder = new PostListAdapter.OrientNewsHolder(
                 LayoutInflater.from(host)
-                        .inflate(R.layout.post_item, parent, false));
+                        .inflate(R.layout.post_item, parent, false),
+                textSize);
         holder.itemView.setOnClickListener(view -> {
-            Bundle b = new Bundle();
-            b.putInt(PostActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
-            Intent intent = new Intent(host,PostActivity.class);
+            //Bundle b = new Bundle();
+            //b.putInt(PostActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
+            Intent intent = new Intent(host,DetailActivity.class);
             //intent.setClass(host, OrientNewsActivity.class);//todo orient
-            intent.putExtra("bundle",b);
+            intent.putExtra(DetailActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
 //            setGridItemContentTransitions(holder.image);
 
             host.startActivityForResult(intent, REQUEST_CODE_VIEW_POST);
@@ -274,12 +293,13 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
     }
 
     static class OrientNewsHolder extends RecyclerView.ViewHolder implements Divided {
-        @BindView(R.id.news_spacer)ImageView image;
-        @BindView(R.id.news_title)
-        public TextView title;
-        public OrientNewsHolder(View itemView) {
+        @BindView(R.id.news_spacer)  ImageView image;
+        @BindView(R.id.news_title)   TextView title;
+//        @BindView(R.id.content_text) TextView content_text;
+        public OrientNewsHolder(View itemView,float textSize) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
         }
     }
 

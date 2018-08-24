@@ -92,6 +92,9 @@ public class PostRepository {
         return  Unit.INSTANCE;
     }
 
+    public void updatePost(Post post){
+        postDao.update(post);
+    }
     public void insertPost(Post post){
         try {
             post.thumbnail_images.largeUrl = post.thumbnail_images.large.url;
@@ -159,5 +162,9 @@ public class PostRepository {
     @MainThread
     private LiveData<NetworkState> refresh(int page,int source){
         return new MutableLiveData<>();
+    }
+
+    public LiveData<Post> getPost(Integer it) {
+        return postDao.get(it);
     }
 }

@@ -4,18 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
     tools:context="com.tps.orientnews.ui.MainActivity">
 
+    <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/OrientTheme.AppBarOverlay"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:fitsSystemWindows="false">-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             style="@style/Widget.Plaid.HomeToolbar"
             android:background="@drawable/bg_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:fitsSystemWindows="true">
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/OrientTheme.PopupOverlay"/>
 
-        </android.support.v7.widget.Toolbar>
+    <!--</android.support.design.widget.AppBarLayout>-->
+
 
     <include layout="@layout/content_main" />
 

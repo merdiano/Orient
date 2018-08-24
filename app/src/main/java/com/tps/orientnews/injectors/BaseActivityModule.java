@@ -23,6 +23,7 @@ public abstract class BaseActivityModule {
     @Binds
     abstract Context activityContext(Activity activity);
 
+    @PerActivity
     @Provides
     static ViewPreloadSizeProvider<Post> viewPreloadSizeProvider(){
         return  new ViewPreloadSizeProvider<>();

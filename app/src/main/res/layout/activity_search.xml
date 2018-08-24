@@ -18,7 +18,6 @@
         android:outlineProvider="bounds"
         android:elevation="0dp"
         android:transitionGroup="false"
-        android:background="@drawable/bg_toolbar"
         android:theme="@style/SearchViewTheme">
 
         <View
@@ -61,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="?android:actionBarSize"
-        android:background="@color/background_light"
+        android:background="@color/search_background"
         android:elevation="@dimen/z_app_bar">
 
         <ProgressBar

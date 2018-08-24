@@ -10,7 +10,7 @@ import dagger.Module;
 /**
  * Created by merdan on 7/27/18.
  */
-@Module(includes = {BaseActivityModule.class,NetworkModule.class,DatabaseModule.class})
+@Module(includes = {BaseActivityModule.class,NetworkModule.class})
 public abstract class SearchActivityModule {
     @Binds
     abstract AppCompatActivity appCompatActivity(SearchActivity searchActivity);

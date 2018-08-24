@@ -15,5 +15,10 @@
     </item>
     <item
         android:gravity="center|bottom"
+
+        android:top="2dp"
+        android:left="125dp"
+        android:right="125dp"
+        android:bottom="10dp"
         android:drawable="@drawable/ic_logo_inverse"/>
 </layer-list>

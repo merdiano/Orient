@@ -1,15 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="OrientTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="OrientTheme"  parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorBackground">@color/background_light</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <!--<item name="android:windowTranslucentNavigation">false</item>-->
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
-        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 
@@ -19,11 +24,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="TextAppearance.CommentAuthor" parent="@android:style/TextAppearance.Holo.Medium">
+    <style name="TextAppearance.CommentAuthor" parent="@android:style/TextAppearance.Material.Caption">
         <item name="android:fontFamily">sans-serif-medium</item>
-
         <item name="android:textSize">14sp</item>
-
+        <item name="android:fontFeatureSettings">smcp, onum</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
 
     <style name="TextAppearance.CommentAuthor.DesignerNews">
@@ -31,24 +36,24 @@
         <item name="android:fontFamily">@font/hermeneus_one_regular</item>
     </style>
 
-    <style name="TextAppearance.Comment" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">15sp</item>
+    <style name="TextAppearance.Comment" parent="@android:style/TextAppearance.Material.Body1">
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/text_secondary_dark</item>
-
-        <!--<item name="@android:lineHeightHint">24sp</item>-->
-        <!--<item name="android:letterSpacing">0.01</item>-->
+        <!--<item name="lineHeightHint">24sp</item>-->
+        <item name="android:letterSpacing">0.01</item>
     </style>
 
-    <style name="TextAppearance.Filter" parent="@android:style/TextAppearance.Medium">
+    <style name="TextAppearance.Filter" parent="@android:style/TextAppearance.Material.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/filter_text</item>
         <item name="android:fontFamily">@font/hermeneus_one_regular</item>
     </style>
 
-    <style name="TextAppearance.DialogContent" parent="@android:style/TextAppearance.Large">
+    <style name="TextAppearance.DialogContent" parent="@android:style/TextAppearance.Material.Subhead">
         <item name="android:textColor">@color/text_secondary_dark</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
 
+        <item name="android:letterSpacing">0.01</item>
+        <!--<item name="lineHeightHint">24sp</item>-->
     </style>
 
     <style name="TextAppearance.EmptyText" parent="@style/TextAppearance.DialogContent">
@@ -59,45 +64,78 @@
     <style name="OrientTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="OrientTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    <style name="TextAppearance.DribbbleShotTitle" parent="@android:style/TextAppearance.Large">
+    <style name="TextAppearance.DribbbleShotTitle" parent="@android:style/TextAppearance.Material.Headline">
         <item name="android:fontFamily">@font/hermeneus_one_regular</item>
         <item name="android:textColor">@color/text_primary_dark</item>
+
     </style>
-    <style name="TextAppearance.DribbbleShotDescription" parent="@android:style/TextAppearance.Medium">
+    <style name="TextAppearance.DribbbleShotDescription" parent="@android:style/TextAppearance.Material.Subhead">
         <item name="android:textColor">@color/text_tertiary_dark</item>
+        <item name="android:letterSpacing">0.01</item>
         <item name="android:fontFamily">@font/roboto_mono</item>
+
     </style>
-    <style name="Widget.Plaid.InlineActionButton" parent="@android:style/Widget.Button">
+    <style name="Widget.Plaid.InlineActionButton" parent="@android:style/Widget.Material.Button">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAppearance">@style/TextAppearance.CommentAuthor</item>
         <item name="android:drawablePadding">@dimen/spacing_micro</item>
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
-    <style name="TextAppearance.CommentTimestamp" parent="@android:style/TextAppearance.Small">
+    <style name="TextAppearance.CommentTimestamp" parent="@android:style/TextAppearance.Material.Caption">
         <item name="android:textColor">@color/hint_disabled_dark</item>
         <item name="android:textSize">14sp</item>
-
+        <item name="android:fontFeatureSettings">onum, smcp</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+    <style name="PlaidDarkOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">
+        <!-- Used to theme dark elements in light themed screens.
+             Extend the material dark Action Bar overlay as this contains text styling. -->
+    </style>
+    <style name="PlaidOverlay" parent="@android:style/ThemeOverlay.Material.Light">
+        <!-- Used to theme dark elements in light themed screens.
+             Extend the material dark Action Bar overlay as this contains text styling. -->
     </style>
     <style name="Widget.Plaid" parent="android:Widget" />
     <style name="Widget.Plaid.Toolbar">
+        <item name="android:titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>
         <item name="android:background">?android:colorPrimary</item>
+        <item name="android:elevation">@dimen/z_app_bar</item>
         <item name="android:theme">@style/PlaidDarkOverlay</item>
     </style>
+
     <style name="Widget.Plaid.HomeToolbar" parent="Widget.Plaid.Toolbar">
         <item name="android:background">@drawable/bg_toolbar</item>
+        <item name="android:theme">@android:style/ThemeOverlay.Material.Dark</item>
+
+    </style>
+    <style name="Widget.Plaid.Navbar">
+        <item name="android:background">@color/text_primary_light</item>
+    </style>
+    <style name="ExpandedFabTheme" parent="@android:style/ThemeOverlay.Material.Light">
+        <item name="android:textColorPrimary">@color/dark_icon</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/dark_icon</item>
+        <item name="android:colorControlActivated">@color/dark_icon</item>
     </style>
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
 
         <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">#f1f1f1
-        </item>
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
 
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#42221f1f
         </item>
     </style>
-
+    <style name="SearchViewTheme" parent="PlaidDarkOverlay">
+        <item name="colorControlActivated">?android:colorAccent</item>
+        <item name="android:searchViewStyle">@style/Widget.Plaid.SearchView</item>
+    </style>
+    <style name="Widget.Plaid.SearchView" parent="android:style/Widget.Material.SearchView">
+        <item name="android:searchIcon">@android:color/transparent</item>
+        <item name="android:searchHintIcon" tools:targetApi="lollipop_mr1">@android:color/transparent</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:submitBackground">@android:color/transparent</item>
+    </style>
 
 </resources>

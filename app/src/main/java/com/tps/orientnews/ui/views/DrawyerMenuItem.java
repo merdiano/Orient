@@ -50,7 +50,7 @@ public class DrawyerMenuItem implements Divided{
             case R.string.all_categories:
                 return R.drawable.ms_ic_news;
             case R.string.favorite_posts:
-                return R.drawable.ic_favorites;
+                return R.drawable.ic_favorite;
             case  R.string.action_settings:
                 return R.drawable.ic_settings;
         }

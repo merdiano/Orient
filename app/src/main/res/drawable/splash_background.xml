@@ -11,6 +11,10 @@
         android:gravity="center"
         android:width="200dp"
         android:height="122dp"
+        android:right="90dp"
+        android:left="90dp"
+        android:top="250dp"
+        android:bottom="300dp"
         android:drawable="@drawable/ic_logo_inverse"/>
 
     <!-- Your product logo - 144dp color version of your app icon -->

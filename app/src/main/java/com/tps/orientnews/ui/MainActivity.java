@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,10 +15,12 @@ import android.support.annotation.Nullable;
 import android.support.transition.TransitionManager;
 
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -63,7 +67,8 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 @PerActivity
-public class MainActivity extends BaseActivity implements DrawyerItemCallback{
+public class MainActivity extends BaseActivity<MainActivityViewModel>
+        implements DrawyerItemCallback{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -89,27 +94,27 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
     Observable<Boolean> connectionStatus;
     Disposable internetDisposable;
     private DrawyerMenuItem allPosts;
-    @Inject
-    ViewModelFactory<MainActivityViewModel> viewModelFactory;
-    private MainActivityViewModel viewModel;
+//    @Inject
+//    ViewModelFactory<MainActivityViewModel> viewModelFactory;
+//    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setTheme(R.style.OrientTheme);
         super.onCreate(savedInstanceState);
+        setTheme(R.style.OrientTheme);
 //        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);//for vector drawables
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setupDrawyer();
         //todo check this on fullscreen
+        loading.getIndeterminateDrawable()
+                .setColorFilter(getResources().getColor(R.color.colorAccent),
+                    PorterDuff.Mode.SRC_IN);
 
-        viewModel = ViewModelProviders.of(MainActivity.this,viewModelFactory)
-                .get(MainActivityViewModel.class);
-
-//        adapter.setHasStableIds(true);
         grid.setAdapter(adapter);
 //        grid.setHasFixedSize(true);
         grid.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
@@ -125,20 +130,20 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
 //
 //        });
 
+
+
         NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
 
         viewModel.getCategories().observe(this,this::fillDrawyer);
         viewModel.postList.observe(this, posts -> {
-//           if(posts.size()!=0)
               adapter.submitList(posts);
-//            swipeContainer.setRefreshing(false);
-//            isLoading = false;
-//            checkEmptyState();
+
             if(posts.size() != 0)
                 loading.setVisibility(View.GONE);
             else
                 loading.setVisibility(View.GONE);
         });
+
         viewModel.networkState.observe(this, networkState -> {
             adapter.setNetworkState(networkState);
             int postCount = adapter.getItemCount();
@@ -158,6 +163,7 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
                         avd = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_no_connection);
                         if (noConnection != null && avd != null) {
                             noConnection.setImageDrawable(avd);
+
                             avd.start();
                         }
                     }
@@ -170,8 +176,11 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
             int source = savedInstanceState.getInt(KEY_SOURCE);
             viewModel.loadPosts(source);
         }
-        else
+        else{
             viewModel.loadPosts(-1);
+
+
+        }
         subscribeToSource();
 
     }
@@ -288,6 +297,14 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == SettingsActivity.SETTINGS_REQUEST_CODE){
+            recreate();
+        }
+    }
+
+    @Override
     public void onActivityReenter(int resultCode, Intent data) {
         if (data == null || resultCode != RESULT_OK
                 || !data.hasExtra(PostActivity.RESULT_EXTRA_POST_ID)) return;
@@ -356,6 +373,8 @@ public class MainActivity extends BaseActivity implements DrawyerItemCallback{
                 categoryItemClicked(0);
                 break;
             case  R.string.action_settings:
+                startActivityForResult(new Intent(MainActivity.this,SettingsActivity.class),
+                        SettingsActivity.SETTINGS_REQUEST_CODE);
                 break;
         }
     }

@@ -71,6 +71,7 @@ import com.tps.orientnews.room.User;
 import com.tps.orientnews.utils.ColorUtils;
 import com.tps.orientnews.utils.ViewUtils;
 import com.tps.orientnews.utils.glide.GlideApp;
+import com.tps.orientnews.viewmodels.DetailActivityViewModel;
 
 import java.text.NumberFormat;
 
@@ -85,7 +86,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static com.tps.orientnews.utils.AnimUtils.getFastOutSlowInInterpolator;
 
 @PerActivity
-public class PostActivity extends BaseActivity {
+public class PostActivity extends BaseActivity<DetailActivityViewModel> {
 
     private static final int SHARE_REQUEST_CODE = 1233;
     @BindView(R.id.toolbar)
@@ -173,8 +174,9 @@ public class PostActivity extends BaseActivity {
 //        settings.setDatabasePath(getApplicationContext().getFilesDir().getAbsolutePath() + "/databases");
         //settings.setLoadWithOverviewMode(true);
         //settings.setUseWideViewPort(true);
+//        webDesc.getSettings().setSupportZoom(true);
 //        webDesc.getSettings().setBuiltInZoomControls(true);
-//        webDesc.getSettings().setDisplayZoomControls(false);
+//        webDesc.getSettings().setDisplayZoomControls(true);
 
         webDesc.setWebChromeClient(new WebChromeClient(){
             @Override

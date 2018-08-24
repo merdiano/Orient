@@ -15,7 +15,7 @@ import dagger.android.AndroidInjector;
  * Created by merdan on 7/12/18.
  */
 @Singleton
-@Component(modules = {OrientAppModule.class,DatabaseModule.class,NetworkModule.class,ViewModelModule.class})
+@Component(modules = {OrientAppModule.class,NetworkModule.class,ViewModelModule.class})
 public interface OrientAppComponent extends AndroidInjector<OrientApplication>{
 
 //    void inject (OrientApplication app);

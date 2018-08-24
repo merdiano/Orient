@@ -2,6 +2,7 @@ package com.tps.orientnews.injectors;
 
 import android.app.Activity;
 import android.arch.paging.PagedList;
+import android.arch.paging.PagingRequestHelper;
 import android.support.v7.app.AppCompatActivity;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
@@ -14,6 +15,9 @@ import com.tps.orientnews.room.Post;
 import com.tps.orientnews.ui.MainActivity;
 import com.tps.orientnews.ui.adapters.FeedAdapter;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -24,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by merdan on 7/13/18.
  */
-@Module(includes = {BaseActivityModule.class,NetworkModule.class,DatabaseModule.class,ViewModelModule.class})
+@Module(includes = {BaseActivityModule.class,NetworkModule.class})
 public abstract  class MainActivityModule {
     /**
      * As per the contract specified in {@link BaseActivityModule}; "This must be included in all
@@ -52,7 +56,7 @@ public abstract  class MainActivityModule {
 
 
 
-
+    @PerActivity
     @Provides
     static RecyclerViewPreloader<Post> provideRecyclerViewPreloader(
             Activity activity,FeedAdapter adapter,ViewPreloadSizeProvider<Post> preloadSizeProvider)
@@ -61,7 +65,7 @@ public abstract  class MainActivityModule {
         return new RecyclerViewPreloader<>(activity,adapter,preloadSizeProvider,4);
 
     }
-
+    @PerActivity
     @Provides
     static InternetObservingSettings provideInternetSettings(){
         return InternetObservingSettings
@@ -69,13 +73,15 @@ public abstract  class MainActivityModule {
                 .strategy(new SocketInternetObservingStrategy())
                 .build();
     }
-
+    @PerActivity
     @Provides
     static Observable<Boolean> provideConnectionState(InternetObservingSettings settings){
         return ReactiveNetwork.observeInternetConnectivity(settings)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+
 
 
 }

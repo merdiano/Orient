@@ -52,12 +52,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @PerActivity
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity<SearchViewModel> {
 
     @Inject FeedAdapter feedAdapter;
-    @Inject
-    ViewModelFactory<SearchViewModel> viewModelFactory;
-    private SearchViewModel viewModel;
+
     @BindView(R.id.searchback)
     ImageButton searchBack;
     @BindView(R.id.searchback_container)

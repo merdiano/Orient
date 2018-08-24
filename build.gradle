@@ -3,10 +3,10 @@
 buildscript {
     ext.versions = [
             'compileSdk'    : 27,
-            'targetSdk'     : 25,
+            'targetSdk'     : 26,
             'buildTools'    : '27.0.3',
             'butterknife'   : '8.8.1',
-            'glide'         : '4.6.1',
+            'glide'         : '4.8.0',
             'kotlin'        : '1.2.51',
             'retrofit'      : '2.3.0',
             'supportLibrary': '27.1.1',
@@ -17,15 +17,20 @@ buildscript {
     ]
 
     repositories {
+        mavenCentral()
         google()
         jcenter()
-
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.1'
 //        classpath "org.greenrobot:greendao-gradle-plugin:${versions.greendao}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.google.gms:google-services:${versions.googleGms}"
+        classpath 'io.fabric.tools:gradle:1.25.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -33,9 +38,13 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenCentral()
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://maven.google.com/'
+        }
     }
 }
 

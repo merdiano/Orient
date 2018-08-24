@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.tps.orientnews.ui.MainActivity"
+
     tools:showIn="@layout/app_bar_main">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <View
-            android:id="@+id/status_bar_background"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/status_bar_back" />
+        <!--<View-->
+            <!--android:id="@+id/status_bar_background"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:background="@color/status_bar_back" />-->
         <!--<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
             <!--android:id="@+id/swipeContainer"-->
             <!--android:layout_width="match_parent"-->

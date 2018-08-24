@@ -13,7 +13,7 @@
     <string name="msg_subscribed">Подписан</string>
     <string name="msg_subscribe_failed">подписка не удалось</string>
     <string name="night_mode">Ночной режим</string>
-    <string name="loading_video">Loading video...</string>
+    <string name="loading_video">Загрузка видео ...</string>
     <string name="all_categories">Все рубрики</string>
     <string name="favorite_posts">Избранные</string>
     <plurals name="likes">
@@ -34,4 +34,19 @@
     <string name="added_to_favs">Добавлено в избранное</string>
     <string name="share_completed">завершено</string>
     <string name="removed_from_favs">Удалено из избранного</string>
+
+    <string name="push_mode">Push-уведомления</string>
+    <string name="push_mode_sum">Получить Push-уведомления о новых сообщениях</string>
+    <string name="night_mode_sum">Переключение в ночной режим</string>
+    <string name="title_font_size">Размер шрифта</string>
+    <string name="summary_font_size">Выберите размер шрифта</string>
+    <string name="dialog_title_font_size">Выберите размер шрифта</string>
+    <string-array name="entries_font_size">
+        <item>Very Small</item>
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>XLarge</item>
+
+    </string-array>
 </resources>

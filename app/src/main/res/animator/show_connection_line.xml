@@ -18,8 +18,8 @@
 <objectAnimator
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:propertyName="pathData"
-    android:valueFrom="@string/connection_line_mask_hidden"
-    android:valueTo="@string/connection_line_mask_shown"
+    android:valueFrom="M26,159 L26,159 L32,159 L32,159 Z"
+    android:valueTo="M26,67 L26,159 L32,159 L32,67 Z"
     android:valueType="pathType"
     android:startOffset="1000"
     android:duration="1000"

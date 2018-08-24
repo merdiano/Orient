@@ -11,7 +11,7 @@ import dagger.Module;
 /**
  * Created by merdan on 7/19/18.
  */
-@Module(includes = {BaseActivityModule.class,NetworkModule.class,DatabaseModule.class})
+@Module(includes = {BaseActivityModule.class,NetworkModule.class})
 public abstract  class PostActivityModule  {
     @Binds
     abstract AppCompatActivity appCompatActivity(PostActivity postActivity);

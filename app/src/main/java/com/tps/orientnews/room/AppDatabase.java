@@ -7,7 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 /**
  * Created by merdan on 8/6/18.
  */
-@Database(entities = {Category.class,Post.class,User.class},version = 7,exportSchema = false)
+@Database(entities = {Category.class,Post.class,User.class},version = 8,exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase{
     public abstract CategoryDao categoryDao();

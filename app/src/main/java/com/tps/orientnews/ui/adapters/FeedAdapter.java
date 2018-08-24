@@ -37,6 +37,7 @@ import com.tps.orientnews.injectors.PerActivity;
 import com.tps.orientnews.room.Assets;
 import com.tps.orientnews.room.Category;
 import com.tps.orientnews.room.Post;
+import com.tps.orientnews.ui.DetailActivity;
 import com.tps.orientnews.ui.PostActivity;
 import com.tps.orientnews.ui.views.Divided;
 import com.tps.orientnews.utils.ObservableColorMatrix;
@@ -284,10 +285,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 LayoutInflater.from(host)
                         .inflate(R.layout.post_item, parent, false));
         holder.itemView.setOnClickListener(view -> {
-            Bundle b = new Bundle();
-            b.putInt(PostActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
-            Intent intent = new Intent(host,PostActivity.class);
-            intent.putExtra("bundle",b);
+//            Bundle b = new Bundle();
+//            b.putInt(DetailActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
+            Intent intent = new Intent(host,DetailActivity.class);
+            intent.putExtra(DetailActivity.EXTRA_POST,getItem(holder.getAdapterPosition()).id);
 //            setGridItemContentTransitions(holder.image);
 
             host.startActivityForResult(intent, REQUEST_CODE_VIEW_POST);

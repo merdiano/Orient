@@ -4,8 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.paging.PagedList;
 import android.arch.paging.PagingRequestHelper;
 
+import com.tps.orientnews.viewmodels.DetailActivityViewModel;
 import com.tps.orientnews.viewmodels.MainActivityViewModel;
-import com.tps.orientnews.viewmodels.MainViewModel;
 import com.tps.orientnews.viewmodels.SearchViewModel;
 
 import dagger.Binds;
@@ -28,8 +28,12 @@ public abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MainActivityViewModel.class)
-    abstract ViewModel mainActivityViewModel(MainActivityViewModel userViewModel);
+    abstract ViewModel mainActivityViewModel(MainActivityViewModel mainViewModel);
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailActivityViewModel.class)
+    abstract ViewModel detailActivityViewModel(DetailActivityViewModel detailViewModel);
 
     @Provides
     static Executor provideExecuter(){

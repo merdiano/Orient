@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -9,10 +9,10 @@ android {
     buildToolsVersion versions.buildTools
     defaultConfig {
         applicationId "com.tps.orientnews"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         archivesBaseName = "orient"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.core:core-ktx:0.3'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
 //    implementation "org.greenrobot:greendao:${versions.greendao}"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'android.arch.lifecycle:viewmodel:1.1.1'
@@ -50,6 +51,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "com.android.support:support-dynamic-animation:${versions.supportLibrary}"
     implementation "com.android.support:palette-v7:${versions.supportLibrary}"
+    implementation "com.android.support:preference-v7:${versions.supportLibrary}"
     //    implementation "com.android.support:support-v4:${versions.supportLibrary}"
     implementation "com.android.support:palette-v7:${versions.supportLibrary}"
     implementation "com.github.bumptech.glide:glide:${versions.glide}"
@@ -62,6 +64,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterknife}"
     implementation 'com.mindorks.android:placeholderview:1.0.3'
     annotationProcessor 'com.mindorks.android:placeholderview-compiler:1.0.3'
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"

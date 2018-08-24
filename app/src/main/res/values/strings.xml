@@ -44,11 +44,34 @@
     <string name="no_search_results">No results for “%1$s”</string>
     <string name="search_hint">Search News</string>
     <string name="confirm_save_search">Save</string>
+    <string name="push_mode">Push Notifications</string>
+    <string name="push_mode_sum">Recieve Push Notifications about new posts</string>
     <string name="night_mode">Night mode</string>
+    <string name="night_mode_sum">Switch to night mode</string>
     <string name="loading_video">Loading video...</string>
     <string name="all_categories">All categories</string>
     <string name="favorite_posts">Favorite posts</string>
     <string name="added_to_favs">Added to favorites</string>
     <string name="share_completed">Shareing complteted</string>
     <string name="removed_from_favs">Removed from favorites</string>
+    <string name="title_font_size">Font Size</string>
+    <string name="summary_font_size">Select font size</string>
+    <string name="dialog_title_font_size">Select font size</string>
+    <string-array name="entries_font_size">
+        <item>Very Small</item>
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>XLarge</item>
+
+    </string-array>
+    <string-array name="entryvalues_font_size">
+        <item>very_small_text</item>
+        <item>small_text</item>
+        <item>medium_text</item>
+        <item>large_text</item>
+        <item>xlarge_text</item>
+
+
+    </string-array>
 </resources>

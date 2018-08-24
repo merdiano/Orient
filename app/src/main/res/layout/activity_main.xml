@@ -13,30 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--<android.support.design.widget.NavigationView-->
-        <!--android:id="@+id/nav_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:fitsSystemWindows="true"-->
-        <!---->
-        <!--app:menu="@menu/activity_main_drawer" />-->
-    <!--&lt;!&ndash; filter drawer &ndash;&gt;-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/filters"-->
-        <!--android:layout_width="@dimen/drawer_width"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:paddingTop="@dimen/spacing_normal"-->
-        <!--android:paddingBottom="@dimen/spacing_normal"-->
-        <!--android:elevation="@dimen/z_drawer"-->
-        <!--android:background="@color/text_primary_light"-->
-        <!--android:clipToPadding="false"-->
-        <!--android:scrollbars="vertical"-->
-        <!--android:scrollbarStyle="outsideOverlay"-->
-        <!--app:layoutManager="android.support.v7.widget.LinearLayoutManager"-->
-        <!--tools:listitem="@layout/filter_item" />-->
     <com.mindorks.placeholderview.PlaceHolderView
         android:id="@+id/drawerView"
 
@@ -46,7 +22,7 @@
         android:paddingTop="@dimen/spacing_normal"
         android:paddingBottom="@dimen/spacing_normal"
         android:elevation="@dimen/z_drawer"
-        android:background="@color/text_primary_light"
+        android:theme="@style/Widget.Plaid.Navbar"
         android:clipToPadding="false"
 
         android:scrollbarStyle="outsideOverlay"
