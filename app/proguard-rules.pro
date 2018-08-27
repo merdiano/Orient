@@ -27,3 +27,24 @@
   **[] $VALUES;
   public *;
 }
+
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-printmapping mapping.txt
+
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+-keep class com.tps.orientnews.room.** { *; }
+-keep class com.tps.orientnews.api.** { *; }
+
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-dontwarn com.squareup.okhttp.**
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+
+-dontwarn okhttp3.**

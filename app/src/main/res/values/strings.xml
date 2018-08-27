@@ -65,7 +65,7 @@
         <item>XLarge</item>
 
     </string-array>
-    <string-array name="entryvalues_font_size">
+    <string-array translatable="false" name="entryvalues_font_size">
         <item>very_small_text</item>
         <item>small_text</item>
         <item>medium_text</item>

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Priority;
@@ -83,7 +85,8 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
     @BindView(R.id.player_avatar) ImageView playerAvatar;
     @BindDimen(R.dimen.large_avatar_size) int largeAvatarSize;
     @BindView(R.id.toolbar) Toolbar toolbar;
-
+    @BindView(android.R.id.empty)ProgressBar loading;
+    private Post post;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,16 +107,19 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
         }
 
         int postId = getIntent().getIntExtra(EXTRA_POST,0);
-
+        loading.getIndeterminateDrawable()
+                .setColorFilter(getResources().getColor(R.color.colorAccent),
+                        PorterDuff.Mode.SRC_IN);
+        loading.setVisibility(View.VISIBLE);
         viewModel.post.observe(this,this::bindPost);
         viewModel.loadPost(postId);
-
-
 
     }
 
     @OnClick(R.id.fab)
     void fabClicked(View view){
+
+        if(post == null) return;
 
         Snackbar.make(view, viewModel.addToFavorite()?
                         R.string.added_to_favs : R.string.removed_from_favs,
@@ -121,13 +127,33 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
                 .show();
     }
 
+    @OnClick(R.id.shot_view_count)
+    void viewClicked(View view){
+        ((AnimatedVectorDrawable) viewCount.getCompoundDrawables()[1])
+                .start();
+    }
+    @OnClick(R.id.shot_share_action)
+    void shareClicked(View v){
+        if(post == null) return;
+        ((AnimatedVectorDrawable) share.getCompoundDrawables()[1]).start();
+        //new ShareOrientImageTask(PostActivity.this, post).execute();
+        Intent i = ShareCompat.IntentBuilder.from(DetailActivity.this)
+                .setType("text/plain")
+                .setChooserTitle(post.title)
+                .setText(post.url)
+                .createChooserIntent();
+
+        startActivityForResult(i,SHARE_REQUEST_CODE);
+    }
+
     private void bindPost(Post post){
         if(post == null) return;
-
+        this.post = post;
+        loading.setVisibility(View.GONE);
 //        getSupportActionBar().setTitle(post.title);
 //        ctLayout.setTitle(post.title);
         title.setText(post.title);
-        //todo text goes here111
+
         Spannable html = ViewUtils.getSpannableHtmlWithImageGetter(postContent,post.content);
         ViewUtils.setClickListenerOnHtmlImageGetter(html, new ViewUtils.Callback() {
             @Override
@@ -157,20 +183,20 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
                         R.plurals.views,
                         post.views,
                         nf.format(post.views)));
-        viewCount.setOnClickListener(v ->
-                ((AnimatedVectorDrawable) viewCount.getCompoundDrawables()[1])
-                        .start());
-        share.setOnClickListener(v -> {
-            ((AnimatedVectorDrawable) share.getCompoundDrawables()[1]).start();
-            //new ShareOrientImageTask(PostActivity.this, post).execute();
-            Intent i = ShareCompat.IntentBuilder.from(DetailActivity.this)
-                    .setType("text/plain")
-                    .setChooserTitle(post.title)
-                    .setText(post.url)
-                    .createChooserIntent();
-
-            startActivityForResult(i,SHARE_REQUEST_CODE);
-        });
+//        viewCount.setOnClickListener(v ->
+//                ((AnimatedVectorDrawable) viewCount.getCompoundDrawables()[1])
+//                        .start());
+//        share.setOnClickListener(v -> {
+//            ((AnimatedVectorDrawable) share.getCompoundDrawables()[1]).start();
+//            //new ShareOrientImageTask(PostActivity.this, post).execute();
+//            Intent i = ShareCompat.IntentBuilder.from(DetailActivity.this)
+//                    .setType("text/plain")
+//                    .setChooserTitle(post.title)
+//                    .setText(post.url)
+//                    .createChooserIntent();
+//
+//            startActivityForResult(i,SHARE_REQUEST_CODE);
+//        });
         User author = post.author;
         if (author!= null) {
             playerName.setText(author.fullName());
@@ -241,8 +267,14 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
     void setResultAndFinish() {
         if(viewModel.post!=null){
             final Intent resultData = new Intent();
-            resultData.putExtra(RESULT_EXTRA_POST_ID, viewModel.post.getValue().id);
-            setResult(RESULT_OK, resultData);
+            try{
+                resultData.putExtra(RESULT_EXTRA_POST_ID, viewModel.post.getValue().id);
+                setResult(RESULT_OK, resultData);
+
+            }
+            catch (Exception ex){
+                setResult(RESULT_CANCELED);
+            }
 
         }
         finish();

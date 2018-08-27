@@ -7,9 +7,15 @@ import android.arch.paging.PagingRequestHelper
 import com.tps.orientnews.data.NetworkState
 
 private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
-    return PagingRequestHelper.RequestType.values().mapNotNull {
-        report.getErrorFor(it)?.message
-    }.first()
+    try{
+        return PagingRequestHelper.RequestType.values().mapNotNull {
+            report.getErrorFor(it)?.message
+        }.first()
+    }
+    catch (e:IllegalArgumentException){
+        return e.localizedMessage;
+    }
+
 }
 
 fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {

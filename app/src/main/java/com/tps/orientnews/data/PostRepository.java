@@ -2,7 +2,6 @@ package com.tps.orientnews.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.arch.paging.DataSource;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
@@ -11,7 +10,8 @@ import android.support.annotation.MainThread;
 import android.util.Log;
 
 import com.tps.orientnews.api.OrientNewsService;
-import com.tps.orientnews.api.PostsResponse;
+import com.tps.orientnews.api.ListingResponse;
+import com.tps.orientnews.api.PostResponse;
 import com.tps.orientnews.room.Post;
 import com.tps.orientnews.room.PostDao;
 
@@ -48,8 +48,10 @@ public class PostRepository {
         this.config = config;
     }
 
-    private Unit insertToDb(PostsResponse response){
-        if(response == null) return null;
+    private Unit insertToDb(ListingResponse response){
+        if(response == null||response.posts==null){
+            return null;
+        }
         List<Post> newPosts = new ArrayList<>();
         for (Post post : response.posts){
             if(post.title.isEmpty())
@@ -95,7 +97,7 @@ public class PostRepository {
     public void updatePost(Post post){
         postDao.update(post);
     }
-    public void insertPost(Post post){
+    public void insertPost(Post post){//todo same code twice
         try {
             post.thumbnail_images.largeUrl = post.thumbnail_images.large.url;
             post.thumbnail_images.mediumUrl = post.thumbnail_images.medium.url;
@@ -160,11 +162,28 @@ public class PostRepository {
     }
 
     @MainThread
-    private LiveData<NetworkState> refresh(int page,int source){
-        return new MutableLiveData<>();
+    public LiveData<Post> getPost(Integer it) {
+        loadPost(it);
+        return postDao.get(it);
     }
 
-    public LiveData<Post> getPost(Integer it) {
-        return postDao.get(it);
+
+    public void loadPost(Integer postId) {
+        webService.getPost(postId).enqueue(new Callback<PostResponse>() {
+            @Override
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                if(response.isSuccessful() && response.body().post!=null){
+                    executor.execute(() -> {
+                        insertPost(response.body().post);
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostResponse> call, Throwable t) {
+
+                Log.e("load post","load post failed");
+            }
+        });
     }
 }

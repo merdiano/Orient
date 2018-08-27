@@ -5,7 +5,7 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.tps.orientnews.api.OrientNewsService;
-import com.tps.orientnews.api.PostsResponse;
+import com.tps.orientnews.api.ListingResponse;
 import com.tps.orientnews.room.Post;
 
 import android.arch.paging.PagingRequestHelper;
@@ -54,20 +54,20 @@ public class PostBoundryCallback extends PagedList.BoundaryCallback<Post> {
         });
     }
 
-    private void insertIntodb(Response<PostsResponse> response, PagingRequestHelper.Request.Callback it){
+    private void insertIntodb(Response<ListingResponse> response, PagingRequestHelper.Request.Callback it){
 
     }
 
-    private Callback<PostsResponse> createWebserviceCallback(PagingRequestHelper.Request.Callback it){
-        return new Callback<PostsResponse>() {
+    private Callback<ListingResponse> createWebserviceCallback(PagingRequestHelper.Request.Callback it){
+        return new Callback<ListingResponse>() {
             @Override
-            public void onResponse(Call<PostsResponse> call, Response<PostsResponse> response) {
+            public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
 //                response.body().count
                 insertIntodb(response,it);
             }
 
             @Override
-            public void onFailure(Call<PostsResponse> call, Throwable t) {
+            public void onFailure(Call<ListingResponse> call, Throwable t) {
                 it.recordFailure(t);
             }
         };

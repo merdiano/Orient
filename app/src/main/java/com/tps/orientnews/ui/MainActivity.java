@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             if(posts.size() != 0)
                 loading.setVisibility(View.GONE);
             else
-                loading.setVisibility(View.GONE);
+                loading.setVisibility(View.VISIBLE);
         });
 
         viewModel.networkState.observe(this, networkState -> {
@@ -181,24 +181,11 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
 
         }
-        subscribeToSource();
+
 
     }
 
-    private void subscribeToSource(){
-        FirebaseMessaging.getInstance().subscribeToTopic("news")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
 
-                        if (!task.isSuccessful()) {
-                            Log.d("Firebase", "Subscribe failed");
-                        }
-                        Log.d("Firebase", "Subscribed");
-                    }
-
-                });
-    }
 
     private void setupDrawyer(){
         allPosts = new DrawyerMenuItem(getApplicationContext(),R.string.all_categories);
@@ -225,6 +212,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     }
 
     private void fillDrawyer(List<Category> categories){
+        if(categories == null || categories.isEmpty())return;
         for(Category cat : categories){
             DrawyerCategoryItem categoryItem = new DrawyerCategoryItem(getApplicationContext(),cat);
             categoryItem.setItemCallback(MainActivity.this);

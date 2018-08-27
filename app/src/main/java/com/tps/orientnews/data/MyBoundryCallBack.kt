@@ -4,7 +4,7 @@ import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
 import android.support.annotation.MainThread
 import com.tps.orientnews.api.OrientNewsService
-import com.tps.orientnews.api.PostsResponse
+import com.tps.orientnews.api.ListingResponse
 import com.tps.orientnews.room.Post
 import com.tps.orientnews.utils.createStatusLiveData
 import retrofit2.Call
@@ -20,7 +20,7 @@ class MyBoundryCallBack(
         private var page: Int,
         private val webService: OrientNewsService,
         private val ioExecutor: Executor,
-        private val handleResponse: (PostsResponse?) -> Unit)
+        private val handleResponse: (ListingResponse?) -> Unit)
     : PagedList.BoundaryCallback<Post>(){
     val helper = PagingRequestHelper(ioExecutor)
     val networkState = helper.createStatusLiveData()
@@ -30,7 +30,7 @@ class MyBoundryCallBack(
     }
 
     private fun insertItemsIntoDb(
-            response: Response<PostsResponse>,
+            response: Response<ListingResponse>,
             it: PagingRequestHelper.Request.Callback){
         ioExecutor.execute {
             handleResponse(response.body())
@@ -64,17 +64,17 @@ class MyBoundryCallBack(
             webService.getCategoryPosts(page,source,20).enqueue(createWebserviceCallback(it))
     }
     private fun createWebserviceCallback(it: PagingRequestHelper.Request.Callback)
-            : Callback<PostsResponse> {
-        return object : Callback<PostsResponse> {
+            : Callback<ListingResponse> {
+        return object : Callback<ListingResponse> {
             override fun onFailure(
-                    call: Call<PostsResponse>,
+                    call: Call<ListingResponse>,
                     t: Throwable) {
                 it.recordFailure(t)
             }
 
             override fun onResponse(
-                    call: Call<PostsResponse>,
-                    response: Response<PostsResponse>) {
+                    call: Call<ListingResponse>,
+                    response: Response<ListingResponse>) {
 
                 insertItemsIntoDb(response, it)
             }

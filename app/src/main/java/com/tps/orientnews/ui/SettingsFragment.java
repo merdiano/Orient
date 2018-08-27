@@ -51,36 +51,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             AppCompatDelegate.setDefaultNightMode(nightModPref.isChecked()?
                     AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
             getActivity().recreate();
-        }else if(key.equals(KEY_PUSH)){
-            SwitchPreferenceCompat pushPref = (SwitchPreferenceCompat)findPreference(key);
-            if(pushPref.isChecked()){
-                FirebaseMessaging.getInstance().subscribeToTopic("news")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                                if (!task.isSuccessful()) {
-                                    Log.d("Firebase", "Subscribe failed");
-                                }
-                                Log.d("Firebase", "Subscribed");
-                            }
-
-                        });
-            }
-            else {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic("news")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                        if (!task.isSuccessful()) {
-                            Log.d("Firebase", "UnSubscribe failed");
-                        }
-                        Log.d("Firebase", "UnSubscribed");
-                    }
-
-                });
-            }
         }
     }
 }

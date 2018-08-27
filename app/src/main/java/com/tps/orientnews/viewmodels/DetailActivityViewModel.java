@@ -29,7 +29,7 @@ public class DetailActivityViewModel extends ViewModel {
     public void loadPost(int id){
         this.postId.setValue(id);
     }
-
+//    public void reload(int id)
     public boolean addToFavorite(){
         if(this.post != null){
             Post p = this.post.getValue();

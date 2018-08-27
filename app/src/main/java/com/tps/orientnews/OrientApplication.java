@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.tps.orientnews.injectors.DaggerOrientAppComponent;
 import com.tps.orientnews.ui.SettingsFragment;
 
@@ -40,7 +45,12 @@ public class OrientApplication extends Application implements HasActivityInjecto
     public void onCreate() {
         super.onCreate();
         instance = this;
-        Fabric.with(this, new Crashlytics());
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)           // Enables Crashlytics debugger
+                .build();
+        Fabric.with(fabric);
+//        Crashlytics.getInstance().crash();
         PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
 
 //        SharedPreferences shPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -55,6 +65,26 @@ public class OrientApplication extends Application implements HasActivityInjecto
                     AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         }
 
+        if(shPrefs.contains(SettingsFragment.KEY_PUSH)){
+            boolean pushMode = shPrefs.getBoolean(SettingsFragment.KEY_PUSH,true);
+            if(pushMode)subscribeToSource();
+        }
+
+    }
+
+    private void subscribeToSource(){
+        FirebaseMessaging.getInstance().subscribeToTopic("news")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (!task.isSuccessful()) {
+                            Log.d("Firebase", "Subscribe failed");
+                        }
+                        Log.d("Firebase", "Subscribed");
+                    }
+
+                });
     }
 
     @Override

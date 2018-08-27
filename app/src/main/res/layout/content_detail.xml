@@ -118,5 +118,18 @@
             android:padding="@dimen/avatar_padding"
             android:src="@drawable/avatar_placeholder"
             android:foreground="@drawable/avatar_ripple" />
+
+        <ProgressBar
+            android:id="@android:id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="?android:colorAccent"
+            android:indeterminateTintMode="src_in"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

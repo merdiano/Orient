@@ -36,17 +36,17 @@
     <string name="removed_from_favs">Удалено из избранного</string>
 
     <string name="push_mode">Push-уведомления</string>
-    <string name="push_mode_sum">Получить Push-уведомления о новых сообщениях</string>
+    <string name="push_mode_sum">Получать Push-уведомления о новостях</string>
     <string name="night_mode_sum">Переключение в ночной режим</string>
     <string name="title_font_size">Размер шрифта</string>
     <string name="summary_font_size">Выберите размер шрифта</string>
     <string name="dialog_title_font_size">Выберите размер шрифта</string>
     <string-array name="entries_font_size">
-        <item>Very Small</item>
-        <item>Small</item>
-        <item>Medium</item>
-        <item>Large</item>
-        <item>XLarge</item>
+        <item>Очень мелкий</item>
+        <item>Мелкий</item>
+        <item>Средний</item>
+        <item>Крупный</item>
+        <item>Очень крупный</item>
 
     </string-array>
 </resources>

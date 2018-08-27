@@ -11,8 +11,8 @@ android {
         applicationId "com.tps.orientnews"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2
-        versionName "1.1"
+        versionCode 8
+        versionName "1.0.2"
         archivesBaseName = "orient"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
