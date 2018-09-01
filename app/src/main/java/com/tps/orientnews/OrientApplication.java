@@ -47,7 +47,7 @@ public class OrientApplication extends Application implements HasActivityInjecto
         instance = this;
         final Fabric fabric = new Fabric.Builder(this)
                 .kits(new Crashlytics())
-                .debuggable(true)           // Enables Crashlytics debugger
+                .debuggable(true)           // Enables Crashlytics debugger todo release dont forget
                 .build();
         Fabric.with(fabric);
 //        Crashlytics.getInstance().crash();

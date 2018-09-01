@@ -13,9 +13,9 @@ import dagger.Lazy;
  */
 
 public class ViewModelFactory<T extends ViewModel> implements ViewModelProvider.Factory {
-    private Lazy<T> viewModel;
+    private dagger.Lazy<T> viewModel;
     @Inject
-    ViewModelFactory(Lazy<T> viewModel){
+    ViewModelFactory(dagger.Lazy<T> viewModel){
         this.viewModel = viewModel;
     }
 

@@ -32,8 +32,6 @@ import android.widget.TextView;
 
 import com.tps.orientnews.R;
 import com.tps.orientnews.injectors.PerActivity;
-import com.tps.orientnews.injectors.ViewModelFactory;
-
 import com.tps.orientnews.ui.adapters.FeedAdapter;
 import com.tps.orientnews.ui.transitions.CircularReveal;
 import com.tps.orientnews.ui.views.GridItemDividerDecoration;

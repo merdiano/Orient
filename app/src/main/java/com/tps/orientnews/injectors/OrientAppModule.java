@@ -2,12 +2,16 @@ package com.tps.orientnews.injectors;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationManager;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.tps.orientnews.OrientApplication;
+import com.tps.orientnews.R;
 import com.tps.orientnews.api.PushService;
 
 import com.tps.orientnews.room.AppDatabase;
@@ -89,6 +93,20 @@ public abstract class OrientAppModule {
     @Provides @Named("defaultPrefs")
     static SharedPreferences provideDefaultPreferences(Application context){
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Provides
+    static NotificationManager provideNotificationManager(Application application){
+        return (NotificationManager)application.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    @Provides
+    static NotificationCompat.Builder provideNotificationBuilder(Application application){
+        return new NotificationCompat
+                .Builder(application, PushService.ADMIN_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_logo_inverse)  //a resource for your custom small icon
+                .setAutoCancel(true)  //dismisses the notification on click
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
     }
 }
 

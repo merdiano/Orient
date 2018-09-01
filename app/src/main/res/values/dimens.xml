@@ -12,7 +12,7 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_radius">28dp</dimen>
     <dimen name="divider_height">1px</dimen>
-    <dimen name="padding_room_for_fab">88dp</dimen> <!-- padding_normal + fab_size + padding_normal -->
+    <dimen name="padding_room_for_fab">52dp</dimen> <!-- padding_normal + fab_size + padding_normal -->
     <!-- fab_size + padding_normal -->
     <!-- (fab_size / 2) + padding_normal -->
     <!-- 2 * ?android:actionBarSize -->

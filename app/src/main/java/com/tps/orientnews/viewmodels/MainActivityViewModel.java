@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import kotlin.NotImplementedError;
+
 /**
  * Created by merdan on 8/9/18.
  */
@@ -53,6 +55,10 @@ public class MainActivityViewModel extends ViewModel {
         catch (Exception e){}
         this.source.setValue(source);
         return true;
+    }
+
+    public boolean loadFavorites(){
+        throw new NotImplementedError();
     }
 
     public void retry(){

@@ -33,16 +33,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.mindorks.placeholderview.PlaceHolderView;
 
 import com.tps.orientnews.R;
-import com.tps.orientnews.data.NetworkState;
 import com.tps.orientnews.data.Status;
 import com.tps.orientnews.injectors.PerActivity;
-import com.tps.orientnews.injectors.ViewModelFactory;
 import com.tps.orientnews.room.Category;
 import com.tps.orientnews.room.Post;
 
@@ -54,13 +49,8 @@ import com.tps.orientnews.ui.views.GridItemDividerDecoration;
 import com.tps.orientnews.ui.views.HomeGridItemAnimator;
 import com.tps.orientnews.utils.NetworkUtils;
 import com.tps.orientnews.viewmodels.MainActivityViewModel;
-import com.tps.orientnews.viewmodels.MainViewModel;
-
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
