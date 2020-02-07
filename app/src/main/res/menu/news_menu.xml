@@ -2,15 +2,34 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item-->
+        <!--android:id="@+id/day_night"-->
+        <!--android:checkable="false"-->
+        <!--android:enabled="true"-->
+        <!--android:title="Day/Night mode"-->
+        <!--android:visible="true"-->
+        <!--app:showAsAction="always"-->
 
+        <!--android:icon="@drawable/ic_day_night"-->
+        <!--tools:ignore="AppCompatResource" />-->
     <item
-        android:id="@+id/fontAction"
+        android:id="@+id/navigateUp"
         android:checkable="false"
         android:enabled="true"
-        android:title="Settings"
+        android:title="Up"
         android:visible="true"
         app:showAsAction="always"
 
-        android:icon="@drawable/ms_font"
+        android:icon="@drawable/ic_chevron_up"
+        tools:ignore="AppCompatResource" />
+    <item
+        android:id="@+id/navigateDown"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="Up"
+        android:visible="true"
+        app:showAsAction="always"
+
+        android:icon="@drawable/ic_chevron_down"
         tools:ignore="AppCompatResource" />
 </menu>

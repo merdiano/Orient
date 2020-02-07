@@ -45,21 +45,21 @@
     <!-- dribbble player -->
     <dimen name="large_avatar_size">120dp</dimen> <!-- 2 * actionBarSize - 2 * avatar_padding -->
     <!-- large_avatar_margin + large_avatar_size + avatar_margin -->
-    <dimen name="very_small_text">10sp</dimen>
-    <dimen name="very_small_text_title">11sp</dimen>
-    <dimen name="very_small_text_title_content">12sp</dimen>
+    <dimen name="very_small_text">12sp</dimen>
+    <dimen name="very_small_text_title">10sp</dimen>
+    <dimen name="very_small_text_title_content">14sp</dimen>
     <dimen name="small_text">14sp</dimen>
-    <dimen name="small_text_title">13sp</dimen>
+    <dimen name="small_text_title">12sp</dimen>
     <dimen name="small_text_title_content">16sp</dimen>
-    <dimen name="medium_text">18sp</dimen>
-    <dimen name="medium_text_title">15sp</dimen>
-    <dimen name="medium_text_title_content">20sp</dimen>
-    <dimen name="large_text">22sp</dimen>
-    <dimen name="large_text_title">17sp</dimen>
-    <dimen name="large_text_title_content">24sp</dimen>
-    <dimen name="xlarge_text">26sp</dimen>
-    <dimen name="xlarge_text_title">19sp</dimen>
-    <dimen name="xlarge_text_title_content">28sp</dimen>
+    <dimen name="medium_text">16sp</dimen>
+    <dimen name="medium_text_title">14sp</dimen>
+    <dimen name="medium_text_title_content">18sp</dimen>
+    <dimen name="large_text">20sp</dimen>
+    <dimen name="large_text_title">16sp</dimen>
+    <dimen name="large_text_title_content">22sp</dimen>
+    <dimen name="xlarge_text">22sp</dimen>
+    <dimen name="xlarge_text_title">18sp</dimen>
+    <dimen name="xlarge_text_title_content">24sp</dimen>
 
 
 </resources>

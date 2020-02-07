@@ -7,15 +7,16 @@
     <string name="msg_unsubscribed">Подписка отменена</string>
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
-    <string name="action_settings">Настройки</string>
+    <string name="action_settings">Параметры</string>
     <string name="share">Поделиться</string>
     <string name="no_filters_selected">Фильтры не выбраны, нажмите кнопку фильтра выше (<annotation src="@drawable/ic_filter_small">&#2228;</annotation>) <i><annotation foregroundColor="@color/text_secondary_light"> или проведите по экрану справа </annotation> </i></string>
     <string name="msg_subscribed">Подписан</string>
     <string name="msg_subscribe_failed">подписка не удалось</string>
     <string name="night_mode">Ночной режим</string>
     <string name="loading_video">Загрузка видео ...</string>
-    <string name="all_categories">Все рубрики</string>
+    <string name="all_categories">Главная</string>
     <string name="favorite_posts">Избранные</string>
+    <string name="no_favorites">Нет записей в списке избранных</string>
     <plurals name="likes">
         <item quantity="zero">нет лайков</item>
         <item quantity="one">%s лайк</item>
@@ -41,6 +42,8 @@
     <string name="title_font_size">Размер шрифта</string>
     <string name="summary_font_size">Выберите размер шрифта</string>
     <string name="dialog_title_font_size">Выберите размер шрифта</string>
+    <string name="notifications_admin_channel_name">News</string>
+    <string name="notifications_admin_channel_description">Get notified with newest Posts</string>
     <string-array name="entries_font_size">
         <item>Очень мелкий</item>
         <item>Мелкий</item>
@@ -49,4 +52,9 @@
         <item>Очень крупный</item>
 
     </string-array>
+    <string name="title_language">Язык</string>
+    <string name="summary_language">изменение языка</string>
+    <string name="dialog_title_language">Выберите язык</string>
+    <string name="title_version">Версия</string>
+    <string name="title_privacy">Политика конфиденциальности</string>
 </resources>

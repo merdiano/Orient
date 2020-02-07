@@ -6,7 +6,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tps.orientnews.ui.DetailActivity"
+    tools:context="com.tpsadvertising.orientnews.ui.DetailActivity"
     tools:showIn="@layout/activity_detail">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

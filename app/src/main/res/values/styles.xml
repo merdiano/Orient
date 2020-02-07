@@ -25,7 +25,7 @@
     </style>
 
     <style name="TextAppearance.CommentAuthor" parent="@android:style/TextAppearance.Material.Caption">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFeatureSettings">smcp, onum</item>
         <item name="android:letterSpacing">0.02</item>
@@ -33,7 +33,7 @@
 
     <style name="TextAppearance.CommentAuthor.DesignerNews">
         <item name="android:textColor">@color/text_secondary_dark</item>
-        <item name="android:fontFamily">@font/hermeneus_one_regular</item>
+        <item name="android:fontFamily">@font/robotomono_medium</item>
     </style>
 
     <style name="TextAppearance.Comment" parent="@android:style/TextAppearance.Material.Body1">
@@ -44,9 +44,9 @@
     </style>
 
     <style name="TextAppearance.Filter" parent="@android:style/TextAppearance.Material.Title">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/filter_text</item>
-        <item name="android:fontFamily">@font/hermeneus_one_regular</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="TextAppearance.DialogContent" parent="@android:style/TextAppearance.Material.Subhead">
@@ -65,14 +65,14 @@
 
     <style name="OrientTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="TextAppearance.DribbbleShotTitle" parent="@android:style/TextAppearance.Material.Headline">
-        <item name="android:fontFamily">@font/hermeneus_one_regular</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textColor">@color/text_primary_dark</item>
 
     </style>
     <style name="TextAppearance.DribbbleShotDescription" parent="@android:style/TextAppearance.Material.Subhead">
         <item name="android:textColor">@color/text_tertiary_dark</item>
         <item name="android:letterSpacing">0.01</item>
-        <item name="android:fontFamily">@font/roboto_mono</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
 
     </style>
     <style name="Widget.Plaid.InlineActionButton" parent="@android:style/Widget.Material.Button">

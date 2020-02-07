@@ -18,4 +18,19 @@
         android:entryValues="@array/entryvalues_font_size"
         android:dialogTitle="@string/dialog_title_font_size"
         android:defaultValue="medium_text"/>
+    <android.support.v7.preference.ListPreference
+        android:key="language"
+        android:title="@string/title_language"
+        android:summary="@string/summary_language"
+        android:entries="@array/entries_language"
+        android:entryValues="@array/entryvalues_language"
+        android:dialogTitle="@string/dialog_title_language"
+        android:defaultValue="ru"/>
+    <android.support.v7.preference.PreferenceScreen
+        android:key="version"
+        android:title="@string/title_version"
+        android:summary="1.0"/>
+    <android.support.v7.preference.PreferenceScreen
+        android:key="privacy"
+        android:title="@string/title_privacy"/>
 </android.support.v7.preference.PreferenceScreen>

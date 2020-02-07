@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tps.orientnews">
+    package="com.tpsadvertising.orientnews">
 
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+    <!--<meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />-->
     <application
         android:name=".OrientApplication"
         android:allowBackup="true"
@@ -28,26 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.PostActivity"
-            android:label="@string/title_activity_post"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/OrientTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="orient.tm"
-                    android:pathPrefix="/api/"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.DetailActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/OrientTheme">
             <intent-filter>
@@ -68,11 +53,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/OrientTheme">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
-
+                <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -83,7 +65,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.tps.shareprovider"
+            android:authorities="com.tpsadvertising.shareprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -91,9 +73,9 @@
                 android:resource="@xml/glide_disk_cache_path" />
         </provider>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+        <!--<meta-data-->
+            <!--android:name="preloaded_fonts"-->
+            <!--android:resource="@array/preloaded_fonts" />-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_logo_inverse" />
@@ -118,7 +100,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.SettingsActivity"></activity>
+        <activity android:name=".ui.SettingsActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

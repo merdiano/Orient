@@ -25,7 +25,7 @@
         </targets>
         <fade />
         <transition
-            class="com.tps.orientnews.ui.transitions.CircularReveal"
+            class="com.tpsadvertising.orientnews.ui.transitions.CircularReveal"
             app:centerOn="@id/searchback"
             android:interpolator="@android:interpolator/linear_out_slow_in" />
     </transitionSet>

@@ -49,14 +49,30 @@
     <string name="night_mode">Night mode</string>
     <string name="night_mode_sum">Switch to night mode</string>
     <string name="loading_video">Loading video...</string>
-    <string name="all_categories">All categories</string>
+    <string name="all_categories">Home</string>
     <string name="favorite_posts">Favorite posts</string>
     <string name="added_to_favs">Added to favorites</string>
+    <string name="no_favorites">No posts in favorites list</string>
     <string name="share_completed">Shareing complteted</string>
     <string name="removed_from_favs">Removed from favorites</string>
     <string name="title_font_size">Font Size</string>
     <string name="summary_font_size">Select font size</string>
+    <string name="title_language">Language</string>
+    <string name="summary_language">Change language</string>
+    <string name="dialog_title_language">Choose language</string>
+    <string name="lang_ru" translatable="false">Русский</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string-array translatable="false" name="entries_language" >
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+    <string-array translatable="false" name="entryvalues_language">
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
     <string name="dialog_title_font_size">Select font size</string>
+    <string name="notifications_admin_channel_name">News</string>
+    <string name="notifications_admin_channel_description">Get notified with newest Posts</string>
     <string-array name="entries_font_size">
         <item>Very Small</item>
         <item>Small</item>
@@ -74,4 +90,7 @@
 
 
     </string-array>
+
+    <string name="title_version">Version</string>
+    <string name="title_privacy">Privacy policy</string>
 </resources>

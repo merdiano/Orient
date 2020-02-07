@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "334410311645",
-    "firebase_url": "https://orient-bea8d.firebaseio.com",
-    "project_id": "orient-bea8d",
-    "storage_bucket": "orient-bea8d.appspot.com"
+    "project_number": "841898322070",
+    "firebase_url": "https://orient-276c5.firebaseio.com",
+    "project_id": "orient-276c5",
+    "storage_bucket": "orient-276c5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:334410311645:android:7be77ed7c53ad376",
+        "mobilesdk_app_id": "1:841898322070:android:6cba3a04b5dd4c0d",
         "android_client_info": {
-          "package_name": "com.tps.orientnews"
+          "package_name": "com.tpsadvertising.orientnews"
         }
       },
       "oauth_client": [
         {
-          "client_id": "334410311645-cr8brs3ql0cr3crdh9e6gou41lmcnf4h.apps.googleusercontent.com",
+          "client_id": "841898322070-h43g7a5kok5v4ashhl9v5odbl91mi23q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgKjcmuCWHoSwdAUFsU-roycRBG55JdAk"
+          "current_key": "AIzaSyCwhptNPuSG03Rf3wcHx7S_TyfaZI0X2Xc"
         }
       ],
       "services": {
