@@ -1,8 +1,9 @@
 package com.tpsadvertising.orientnews.injectors;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.paging.PagedList;
 import android.arch.paging.PagingRequestHelper;
+
+import androidx.lifecycle.ViewModel;
+import androidx.paging.PagedList;
 
 import com.tpsadvertising.orientnews.viewmodels.DetailActivityViewModel;
 import com.tpsadvertising.orientnews.viewmodels.MainActivityViewModel;
@@ -13,7 +14,6 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by merdan on 8/2/18.

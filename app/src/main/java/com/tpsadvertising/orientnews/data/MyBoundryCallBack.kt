@@ -1,8 +1,8 @@
 package com.tpsadvertising.orientnews.data
 
-import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
-import android.support.annotation.MainThread
+import androidx.paging.PagedList
+import androidx.annotation.MainThread
 import android.util.Log
 import com.tpsadvertising.orientnews.api.OrientNewsService
 import com.tpsadvertising.orientnews.api.ListingResponse

@@ -17,18 +17,12 @@
 package com.tpsadvertising.orientnews.utils;
 
 import android.os.Build;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Utility methods for working with transitions

@@ -5,10 +5,10 @@ import android.app.Application;
 import android.app.Service;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 //import com.crashlytics.android.Crashlytics;

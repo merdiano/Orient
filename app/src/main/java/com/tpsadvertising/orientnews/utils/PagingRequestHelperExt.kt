@@ -1,9 +1,9 @@
 @file:JvmName("PagingRequestHelper")
 package com.tpsadvertising.orientnews.utils
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagingRequestHelper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.tpsadvertising.orientnews.data.NetworkState
 
 private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {

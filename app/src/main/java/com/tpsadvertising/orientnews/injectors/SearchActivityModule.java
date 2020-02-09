@@ -1,6 +1,6 @@
 package com.tpsadvertising.orientnews.injectors;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tpsadvertising.orientnews.ui.SearchActivity;
 

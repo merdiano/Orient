@@ -1,9 +1,8 @@
 package com.tpsadvertising.orientnews.injectors;
 
 import android.app.Activity;
-import android.arch.paging.PagedList;
-import android.arch.paging.PagingRequestHelper;
-import android.support.v7.app.AppCompatActivity;
+import androidx.paging.PagedList;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
@@ -14,9 +13,6 @@ import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strat
 import com.tpsadvertising.orientnews.room.Post;
 import com.tpsadvertising.orientnews.ui.MainActivity;
 import com.tpsadvertising.orientnews.ui.adapters.FeedAdapter;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import dagger.Binds;
 import dagger.Module;

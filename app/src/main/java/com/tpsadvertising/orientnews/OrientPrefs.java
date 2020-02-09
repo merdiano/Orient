@@ -1,9 +1,7 @@
 package com.tpsadvertising.orientnews;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;

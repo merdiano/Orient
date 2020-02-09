@@ -1,13 +1,13 @@
 package com.tpsadvertising.orientnews.viewmodels;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
-import android.arch.lifecycle.ViewModel;
-import android.arch.paging.DataSource;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 import android.util.Log;
 
 import com.tpsadvertising.orientnews.api.ReklamaService;
@@ -18,14 +18,12 @@ import com.tpsadvertising.orientnews.data.PostRepository;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
 import com.tpsadvertising.orientnews.room.Category;
 import com.tpsadvertising.orientnews.room.Post;
-import com.tpsadvertising.orientnews.room.PostDao;
 import com.tpsadvertising.orientnews.room.Reklama;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import kotlin.NotImplementedError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

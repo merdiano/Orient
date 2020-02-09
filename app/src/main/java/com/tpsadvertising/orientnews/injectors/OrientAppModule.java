@@ -1,14 +1,13 @@
 package com.tpsadvertising.orientnews.injectors;
 
-import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.preference.PreferenceManager;
+import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import com.tpsadvertising.orientnews.OrientApplication;
 import com.tpsadvertising.orientnews.R;

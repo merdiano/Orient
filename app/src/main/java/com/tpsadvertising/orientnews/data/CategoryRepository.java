@@ -1,7 +1,7 @@
 package com.tpsadvertising.orientnews.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.tpsadvertising.orientnews.api.CategoriesWrapper;
 import com.tpsadvertising.orientnews.api.OrientNewsService;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import retrofit2.Response;
 

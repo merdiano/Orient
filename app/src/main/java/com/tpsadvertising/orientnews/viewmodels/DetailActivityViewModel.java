@@ -1,14 +1,13 @@
 package com.tpsadvertising.orientnews.viewmodels;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.lifecycle.ViewModel;
 
 import com.tpsadvertising.orientnews.data.PostRepository;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
 import com.tpsadvertising.orientnews.room.Post;
-import com.tpsadvertising.orientnews.room.PostDao;
 
 import javax.inject.Inject;
 

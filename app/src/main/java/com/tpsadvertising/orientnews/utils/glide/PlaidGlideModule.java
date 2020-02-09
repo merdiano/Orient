@@ -18,8 +18,8 @@ package com.tpsadvertising.orientnews.utils.glide;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.os.Build;
-import android.support.v4.app.ActivityManagerCompat;
+
+import androidx.core.app.ActivityManagerCompat;
 
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.annotation.GlideModule;

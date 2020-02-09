@@ -1,12 +1,10 @@
 package com.tpsadvertising.orientnews.injectors;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
-
-import dagger.Lazy;
 
 /**
  * Created by merdan on 8/2/18.

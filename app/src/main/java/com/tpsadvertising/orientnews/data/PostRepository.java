@@ -1,13 +1,12 @@
 package com.tpsadvertising.orientnews.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.paging.DataSource;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 import android.database.sqlite.SQLiteConstraintException;
-import android.support.annotation.MainThread;
-import android.util.Log;
+import androidx.annotation.MainThread;
 
 import com.tpsadvertising.orientnews.api.OrientNewsService;
 import com.tpsadvertising.orientnews.api.ListingResponse;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import kotlin.Unit;
 import retrofit2.Call;

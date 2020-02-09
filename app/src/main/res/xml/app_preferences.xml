@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.SwitchPreferenceCompat
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.SwitchPreferenceCompat
         android:key="night_mode"
         android:title="@string/night_mode"
         android:summary="@string/night_mode_sum"
         android:defaultValue="false" />
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:key="push"
         android:title="@string/push_mode"
         android:summary="@string/push_mode_sum"
         android:defaultValue="true" />
-    <android.support.v7.preference.ListPreference
+    <androidx.preference.ListPreference
         android:key="font_size"
         android:title="@string/title_font_size"
         android:summary="@string/summary_font_size"
@@ -18,7 +18,7 @@
         android:entryValues="@array/entryvalues_font_size"
         android:dialogTitle="@string/dialog_title_font_size"
         android:defaultValue="medium_text"/>
-    <android.support.v7.preference.ListPreference
+    <androidx.preference.ListPreference
         android:key="language"
         android:title="@string/title_language"
         android:summary="@string/summary_language"
@@ -26,11 +26,11 @@
         android:entryValues="@array/entryvalues_language"
         android:dialogTitle="@string/dialog_title_language"
         android:defaultValue="ru"/>
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:key="version"
         android:title="@string/title_version"
         android:summary="1.0"/>
-    <android.support.v7.preference.PreferenceScreen
+    <androidx.preference.PreferenceScreen
         android:key="privacy"
         android:title="@string/title_privacy"/>
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

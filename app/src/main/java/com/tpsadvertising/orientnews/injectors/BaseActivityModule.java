@@ -2,7 +2,7 @@ package com.tpsadvertising.orientnews.injectors;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
 

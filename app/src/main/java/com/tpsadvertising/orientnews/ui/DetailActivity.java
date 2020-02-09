@@ -1,7 +1,6 @@
 package com.tpsadvertising.orientnews.ui;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,15 +13,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ShareCompat;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ShareCompat;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.palette.graphics.Palette;
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.Spannable;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -48,16 +46,12 @@ import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
 import com.tpsadvertising.orientnews.room.Post;
 import com.tpsadvertising.orientnews.room.User;
-import com.tpsadvertising.orientnews.ui.widgets.GlideImageGetter;
 import com.tpsadvertising.orientnews.utils.ColorUtils;
 import com.tpsadvertising.orientnews.utils.ViewUtils;
 import com.tpsadvertising.orientnews.utils.glide.GlideApp;
 import com.tpsadvertising.orientnews.viewmodels.DetailActivityViewModel;
 
 import java.text.NumberFormat;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import butterknife.BindDimen;
 import butterknife.BindView;

@@ -1,14 +1,15 @@
 package com.tpsadvertising.orientnews.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.PagedList;
-import android.support.annotation.NonNull;
+import android.arch.paging.PagingRequestHelper;
+
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
+import androidx.annotation.NonNull;
 
 import com.tpsadvertising.orientnews.api.OrientNewsService;
 import com.tpsadvertising.orientnews.api.ListingResponse;
 import com.tpsadvertising.orientnews.room.Post;
 
-import android.arch.paging.PagingRequestHelper;
 
 import javax.inject.Inject;
 

@@ -20,14 +20,13 @@ import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import android.util.ArrayMap;
 import android.util.FloatProperty;
 import android.util.IntProperty;
 import android.util.Property;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 

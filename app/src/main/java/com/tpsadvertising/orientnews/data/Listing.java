@@ -1,8 +1,8 @@
 package com.tpsadvertising.orientnews.data;
 
-import android.arch.core.util.Function;
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.PagedList;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
 
 /**
  * Created by merdan on 8/9/18.
