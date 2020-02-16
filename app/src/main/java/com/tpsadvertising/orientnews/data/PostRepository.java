@@ -199,4 +199,13 @@ public class PostRepository {
             }
         });
     }
+
+    public Listing<Post> loadPostsOffline(){
+        MutableLiveData<NetworkState> ntState= new MutableLiveData<>();
+        ntState.setValue(NetworkState.FAVORITE);
+        return new Listing<Post>(new LivePagedListBuilder<>(postDao.loadPostsOffline(),config)
+                .build(),
+                ntState,
+                it->{return null;});
+    }
 }

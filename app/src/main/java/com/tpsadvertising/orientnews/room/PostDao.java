@@ -73,4 +73,7 @@ public interface PostDao {
             " Where title Like :query" +
             " ORDER BY date DESC ")
     DataSource.Factory<Integer,Post> searchPosts(String query);
+
+    @Query("Select * From post")
+    DataSource.Factory<Integer,Post> loadPostsOffline();
 }

@@ -57,4 +57,8 @@
     <string name="dialog_title_language">Выберите язык</string>
     <string name="title_version">Версия</string>
     <string name="title_privacy">Политика конфиденциальности</string>
+
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="dialog_title">Вам нравиться наше приложение?</string>
 </resources>

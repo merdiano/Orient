@@ -11,15 +11,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<View-->
-            <!--android:id="@+id/status_bar_background"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:background="@color/status_bar_back" />-->
-        <!--<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
-            <!--android:id="@+id/swipeContainer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipeRefresh">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/grid"
                 android:layout_width="match_parent"
@@ -30,23 +27,17 @@
                 android:paddingTop="?attr/actionBarSize"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:elevation="1dp" />
-        <!--</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>-->
-        <ProgressBar
-            android:id="@android:id/empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTint="?android:colorAccent"
-            android:indeterminateTintMode="src_in" />
 
-        <!--<ViewStub-->
-            <!--android:id="@+id/stub_no_filters"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="@dimen/spacing_huge"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout="@layout/no_filters" />-->
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+<!--       <ProgressBar-->
+<!--            android:id="@android:id/empty"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:indeterminate="true"-->
+<!--            android:indeterminateTint="?android:colorAccent"-->
+<!--            android:indeterminateTintMode="src_in" />-->
 
         <ViewStub
             android:id="@+id/stub_no_connection"

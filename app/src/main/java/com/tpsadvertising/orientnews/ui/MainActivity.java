@@ -3,21 +3,20 @@ package com.tpsadvertising.orientnews.ui;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.transition.TransitionManager;
 
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import androidx.core.view.GravityCompat;
@@ -28,12 +27,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.mindorks.placeholderview.PlaceHolderView;
 
+import com.tpsadvertising.orientnews.AppRater;
 import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.data.NetworkState;
 import com.tpsadvertising.orientnews.data.Status;
@@ -67,9 +66,11 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     DrawerLayout drawer;
     @BindView(R.id.drawerView)
     PlaceHolderView mDrawyerView;
-    @BindView(android.R.id.empty)
-    ProgressBar loading;
+//    @BindView(android.R.id.empty)
+//    ProgressBar loading;
     @BindView(R.id.grid) RecyclerView grid;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
     @Nullable
     @BindView(R.id.no_connection)
     ImageView noConnection;
@@ -97,9 +98,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setupDrawyer();
 
-        loading.getIndeterminateDrawable()
-                .setColorFilter(getResources().getColor(R.color.colorAccent),
-                    PorterDuff.Mode.SRC_IN);
+//        loading.getIndeterminateDrawable()
+//                .setColorFilter(getResources().getColor(R.color.colorAccent),
+//                    PorterDuff.Mode.SRC_IN);
         adapter.setHasStableIds(true);
         grid.setAdapter(adapter);
 //        grid.setHasFixedSize(true);
@@ -116,14 +117,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
 
         viewModel.getCategories().observe(this,this::fillDrawyer);
-        viewModel.postList.observe(this, posts -> {
-              adapter.submitPosts(posts);
 
-            if(posts.size() != 0)
-                loading.setVisibility(View.GONE);
-            else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
-                loading.setVisibility(View.VISIBLE);
-        });
+        viewModel.postListOffline.observe(this, posts -> adapter.submitPosts(posts));
+
         viewModel.networkState.observe(this, networkState -> {
             adapter.setNetworkState(networkState);
             int postCount = adapter.getItemCount();
@@ -135,7 +131,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                     internetDisposable = connectionStatus.subscribe(this::connectionChanged);
 
                 if(postCount == 1){
-                    loading.setVisibility(View.GONE);
+//                    loading.setVisibility(View.GONE);
                     if (noConnection == null) {
                         final ViewStub stub = findViewById(R.id.stub_no_connection);
                         noConnection = (ImageView) stub.inflate();
@@ -149,11 +145,11 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                         }
                     }
                 }
-                else if(postCount>1)
-                    loading.setVisibility(View.GONE);
+                else if(postCount>1){}
+//                    loading.setVisibility(View.GONE);
             }
             else if(networkState == NetworkState.FAVORITE){
-                loading.setVisibility(View.GONE);
+//                loading.setVisibility(View.GONE);
                 if(postCount == 1) {
 
                     noFavs.setVisibility(View.VISIBLE);
@@ -175,6 +171,22 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             viewModel.loadPosts(-1);
         }
         viewModel.loadAdverts();
+
+        swipeRefreshLayout.setProgressViewOffset(false, 0,200);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> viewModel.postList.observe(MainActivity.this, posts -> {
+                adapter.submitPosts(posts);
+
+                if(posts.size() != 0)
+                    swipeRefreshLayout.setRefreshing(false);
+                else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
+                    swipeRefreshLayout.setRefreshing(true);
+            }), 2000);
+            grid.smoothScrollToPosition(0);
+        });
+
+
+        AppRater.app_launched(this);
 
     }
 
@@ -255,7 +267,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                 TransitionManager.beginDelayedTransition(drawer);
                 if (noConnection != null)
                     noConnection.setVisibility(View.GONE);
-                loading.setVisibility(View.VISIBLE);
+//                loading.setVisibility(View.VISIBLE);
                 //fill drawyer if it is empty and fetch posts
                 if (mDrawyerView.getViewResolverCount() == 3) {
                     viewModel.loadCategories(); //load cats somehow

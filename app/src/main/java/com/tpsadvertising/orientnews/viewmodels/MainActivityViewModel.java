@@ -39,7 +39,9 @@ public class MainActivityViewModel extends ViewModel {
     private LiveData<List<Category>> categories;
     private MutableLiveData<Integer> source = new MutableLiveData<>();
     private LiveData<Listing<Post>> repoResult;
+    private LiveData<Listing<Post>> repoResultOffline;
     public LiveData<PagedList<Post>> postList;
+    public LiveData<PagedList<Post>> postListOffline;
     public LiveData<NetworkState> networkState;
     public MutableLiveData<List<Reklama>> adverts = new MutableLiveData<>();
 //    public LiveData<PagedList<Post>> favoritePosts;
@@ -56,8 +58,14 @@ public class MainActivityViewModel extends ViewModel {
             else
                 return postRepository.postsOfOrient(input);
         }) ;
+
+        repoResultOffline = Transformations.map(source, input ->{
+            return postRepository.loadPostsOffline();
+        }) ;
         //todo map favorites
         postList = Transformations.switchMap(repoResult,input -> input.pagedList);
+
+        postListOffline = Transformations.switchMap(repoResultOffline,input -> input.pagedList);
 
         networkState = Transformations.switchMap(repoResult,input -> input.networkState);
 //
