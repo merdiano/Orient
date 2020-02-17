@@ -74,6 +74,6 @@ public interface PostDao {
             " ORDER BY date DESC ")
     DataSource.Factory<Integer,Post> searchPosts(String query);
 
-    @Query("Select * From post")
+    @Query("Select * From post ORDER BY id DESC")
     DataSource.Factory<Integer,Post> loadPostsOffline();
 }

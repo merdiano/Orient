@@ -182,7 +182,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                 else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
                     swipeRefreshLayout.setRefreshing(true);
             }), 2000);
-            grid.smoothScrollToPosition(0);
+            grid.scrollToPosition(0);
         });
 
 
