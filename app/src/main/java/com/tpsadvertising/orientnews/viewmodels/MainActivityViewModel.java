@@ -59,9 +59,7 @@ public class MainActivityViewModel extends ViewModel {
                 return postRepository.postsOfOrient(input);
         }) ;
 
-        repoResultOffline = Transformations.map(source, input ->{
-            return postRepository.loadPostsOffline();
-        }) ;
+        repoResultOffline = Transformations.map(source, input -> postRepository.loadPostsOffline()) ;
         //todo map favorites
         postList = Transformations.switchMap(repoResult,input -> input.pagedList);
 
@@ -132,5 +130,9 @@ public class MainActivityViewModel extends ViewModel {
         }catch (Exception e){
             return -1;
         }
+    }
+
+    public Post getLastPost(){
+        return postRepository.getLastPost();
     }
 }

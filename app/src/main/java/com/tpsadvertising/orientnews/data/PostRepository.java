@@ -208,4 +208,8 @@ public class PostRepository {
                 ntState,
                 it->{return null;});
     }
+
+    public Post getLastPost(){
+        return postDao.getLastPost();
+    }
 }

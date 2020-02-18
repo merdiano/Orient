@@ -4,19 +4,26 @@ package com.tpsadvertising.orientnews.ui;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.transition.TransitionManager;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import androidx.core.view.GravityCompat;
@@ -28,12 +35,17 @@ import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.mindorks.placeholderview.PlaceHolderView;
 
 import com.tpsadvertising.orientnews.AppRater;
+import com.tpsadvertising.orientnews.JobService;
+import com.tpsadvertising.orientnews.NewsResponse;
 import com.tpsadvertising.orientnews.R;
+import com.tpsadvertising.orientnews.RetrofitClient;
+import com.tpsadvertising.orientnews.api.ListingResponse;
 import com.tpsadvertising.orientnews.data.NetworkState;
 import com.tpsadvertising.orientnews.data.Status;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
@@ -55,11 +67,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @PerActivity
 public class MainActivity extends BaseActivity<MainActivityViewModel>
         implements DrawyerItemCallback{
 
+    private static final String TAG = "JobService";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
@@ -87,6 +103,8 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     Observable<Boolean> connectionStatus;
     private Disposable internetDisposable;
     private DrawyerMenuItem allPosts;
+
+    int postid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +206,51 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         AppRater.app_launched(this);
 
+
+
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+
+        new Thread(() -> {
+            Post post = viewModel.getLastPost();
+            Log.d(TAG, "onCreate: " + post.id);
+            editor.putInt("postid", 41453);
+            editor.apply();
+        }).start();
+
+//        Call<NewsResponse> call = RetrofitClient.getmInstance().getApi().getPostsForNotifiaction(41460,5);
+//        call.enqueue(new Callback<NewsResponse>() {
+//            @Override
+//            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+//                Log.d(TAG, "onResponse: " + response.code());
+////                    responseList = response.body().posts;
+//
+////                Log.d(TAG, "onResponse: list size" + responseList.size());
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NewsResponse> call, Throwable t) {
+//                Log.d(TAG, "onFailure: " + t.getCause());
+//            }
+//        });
+
+
+        startBackgroundService();
+
+    }
+
+    private class CustomTask extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... param) {
+            //Do some work
+            return null;
+        }
+
+        protected void onPostExecute(Void param) {
+            //Print Toast or open dialog
+        }
     }
 
     private void setupDrawyer(){
@@ -356,6 +419,28 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         if(viewModel.loadPosts(categoryId)){
             grid.scrollToPosition(0);
             drawer.closeDrawers();
+        }
+    }
+
+    private void startBackgroundService(){
+
+
+
+        ComponentName componentName = new ComponentName(this, JobService.class);
+        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
+                .setRequiresCharging(true)
+                .setPeriodic(2 * 60 * 1000)
+                .setPersisted(true)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .build();
+        JobScheduler jobScheduler = (JobScheduler)getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = jobScheduler.schedule(jobInfo);
+
+        if (resultCode == JobScheduler.RESULT_SUCCESS){
+            Log.d(TAG, "Job Scheduled");
+        }
+        else {
+            Log.d(TAG, "Job Scheduling failed");
         }
     }
 }

@@ -76,4 +76,8 @@ public interface PostDao {
 
     @Query("Select * From post ORDER BY id DESC")
     DataSource.Factory<Integer,Post> loadPostsOffline();
+
+    @Query("SELECT * FROM post ORDER BY id DESC LIMIT 1")
+    Post getLastPost();
+
 }
