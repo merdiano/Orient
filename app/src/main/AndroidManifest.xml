@@ -107,6 +107,18 @@
             android:name=".JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <receiver
+            android:name=".MyAlarm"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+
+        </receiver>
+
         <activity android:name=".ui.SettingsActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

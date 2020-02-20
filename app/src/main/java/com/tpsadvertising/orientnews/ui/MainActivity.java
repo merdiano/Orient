@@ -4,9 +4,12 @@ package com.tpsadvertising.orientnews.ui;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -16,6 +19,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.lifecycle.Observer;
+import androidx.paging.PagedList;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.transition.TransitionManager;
@@ -32,14 +37,18 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.mindorks.placeholderview.PlaceHolderView;
 
 import com.tpsadvertising.orientnews.AppRater;
 import com.tpsadvertising.orientnews.JobService;
+import com.tpsadvertising.orientnews.MyAlarm;
 import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.data.NetworkState;
 import com.tpsadvertising.orientnews.data.Status;
@@ -55,6 +64,10 @@ import com.tpsadvertising.orientnews.ui.views.GridItemDividerDecoration;
 import com.tpsadvertising.orientnews.ui.views.HomeGridItemAnimator;
 import com.tpsadvertising.orientnews.utils.NetworkUtils;
 import com.tpsadvertising.orientnews.viewmodels.MainActivityViewModel;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -191,7 +204,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         }
         viewModel.loadAdverts();
 
-        swipeRefreshLayout.setProgressViewOffset(false, 0,200);
+        swipeRefreshLayout.setProgressViewOffset(false, 0,250);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> viewModel.postList.observe(MainActivity.this, posts -> {
                 adapter.submitPosts(posts);
@@ -216,9 +229,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
 
 
+        setAlarm();
 
-
-        startBackgroundService();
+//        startBackgroundService();
 
     }
 
@@ -326,31 +339,10 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean prefModeOn = preferences.getBoolean(KEY_NIGHT_MODE,false);
-        //boolean appModeOn = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
-//        boolean nightModeFlags = getResources().getConfiguration().uiMode == Configuration.UI_MODE_NIGHT_YES;
         if(requestCode == SettingsActivity.SETTINGS_REQUEST_CODE){
             Intent intent = getIntent();
             finish();
             startActivity(intent);
-//            if(resultCode == Activity.RESULT_OK){
-//                Intent intent = getIntent();
-//                finish();
-//                startActivity(intent);
-//            }
-//            else {
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable()
-//                {
-//                    @Override
-//                    public void run()
-//                    {
-//                        recreate();//wait for activity get resumed then recreate
-//                    }
-//                }, 0);
-//            }
-
         }
     }
 
@@ -372,6 +364,30 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         }
         catch (Exception ex){
             Log.e("Create options menu",ex.getLocalizedMessage());
+        }
+
+        ImageView refreshBtn = (ImageView) menu.findItem(R.id.menu_refresh).getActionView();
+        if (refreshBtn != null) {
+            refreshBtn.setImageResource(R.drawable.ic_refresh_black_24dp);
+
+            Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotation);
+            rotation.setRepeatCount(Animation.INFINITE);
+
+            refreshBtn.setOnClickListener(view -> {
+                view.startAnimation(rotation);
+
+                new Handler().postDelayed(() -> viewModel.postList.observe(MainActivity.this, posts -> {
+                    adapter.submitPosts(posts);
+
+                    if(posts.size() != 0)
+                        view.clearAnimation();
+                    else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
+                        view.startAnimation(rotation);
+                    getLastJobId();
+
+                }), 2000);
+
+            });
         }
         return true;
     }
@@ -403,30 +419,43 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         }
     }
 
-    private void startBackgroundService(){
+    private void setAlarm() {
 
-        ComponentName componentName = new ComponentName(this, JobService.class);
-        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
-                .setRequiresCharging(false)
-                .setPeriodic(24 * 60 * 60 * 1000)
-                .setPersisted(true)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .build();
-        JobScheduler jobScheduler = (JobScheduler)getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
-        int resultCode = jobScheduler.schedule(jobInfo);
+        Calendar calendar = Calendar.getInstance();
 
-        if (resultCode == JobScheduler.RESULT_SUCCESS){
-            Log.d(TAG, "Job Scheduled");
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        // if it's after or equal 6 am schedule for next day
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 9) {
+            Log.e(TAG, "Alarm will schedule for next day!");
+            calendar.add(Calendar.DAY_OF_YEAR, 1); // add, not set!
         }
-        else {
-            Log.d(TAG, "Job Scheduling failed");
+        else{
+            Log.e(TAG, "Alarm will schedule for today!");
         }
+        calendar.set(Calendar.HOUR_OF_DAY, 6);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        //getting the alarm manager
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        //creating a new intent specifying the broadcast receiver
+        Intent i = new Intent(this, MyAlarm.class);
+
+        //creating a pending intent using the intent
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+
+        if (calendar.before(Calendar.getInstance())){
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        //setting the repeating alarm that will be fired every day
+        am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+
     }
 
     private void getLastJobId(){
-//        new Thread(() -> {
-//
-//        }).start();
 
         new Thread(new Runnable() {
             @Override

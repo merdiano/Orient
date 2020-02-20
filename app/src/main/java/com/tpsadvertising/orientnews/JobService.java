@@ -75,8 +75,8 @@ public class JobService extends android.app.job.JobService {
     }
 
     private void doBackgroundWork(JobParameters params) {
-        
-        
+
+
         new Thread(() -> {
 
 
@@ -84,34 +84,47 @@ public class JobService extends android.app.job.JobService {
                 return;
             }
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            int id =  preferences.getInt("postid", 0);
-            Log.d(TAG, "onCreate: " + id);
+            Post post = postRepository.getLastPost();
+            int postId = post.id;
+            Log.d(TAG, "doBackgroundWork: post id " + postId);
 
-
-            Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 5);
+            Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 20);
             call1.enqueue(new Callback<ListingResponse>() {
                 @Override
                 public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
                     Log.d(TAG, "onResponse: " + response.code());
                     responseList = response.body().posts;
 
-
-
                     String content = "";
 
-                    for (int i = 0; i < responseList.size(); i++){
+                    if (responseList.size() < 5){
+                        for (int i = 0; i < 5; i++){
 
-                        int finalI = i;
-                        executor.execute(() -> {
-                            Post post = response.body().posts.get(finalI);
+                            int finalI = i;
+                            executor.execute(() -> {
+                                Post post = response.body().posts.get(finalI);
 
-                            postRepository.insertPost(post);
-                        });
+                                postRepository.insertPost(post);
+                            });
 
 
 
-                        content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                            content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                        }
+                    }else {
+                        for (int i = 0; i < responseList.size(); i++){
+
+                            int finalI = i;
+                            executor.execute(() -> {
+                                Post post = response.body().posts.get(finalI);
+
+                                postRepository.insertPost(post);
+                            });
+
+
+
+                            content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                        }
                     }
 
                     Intent intent = new Intent(context, MainActivity.class);
@@ -119,7 +132,8 @@ public class JobService extends android.app.job.JobService {
 
                     Notification notification = new NotificationCompat.Builder(context, "ChannelID")
                             .setSmallIcon(R.drawable.ic_launcherx)
-                            .setContentTitle(context.getResources().getString(R.string.available_news))
+                            .setContentTitle("Orient News")
+                            .setContentText(context.getResources().getString(R.string.available_news))
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
@@ -144,6 +158,34 @@ public class JobService extends android.app.job.JobService {
                 }
             });
 
+
+//            Call<NewsResponse> call = RetrofitClient.getmInstance().getApi().getPostsForNotifiaction(id,5);
+//            call.enqueue(new Callback<NewsResponse>() {
+//                @Override
+//                public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+//                    Log.d(TAG, "onResponse: " + response.code());
+//                    responseList = response.body().posts;
+//
+//                        Notification notification = new NotificationCompat.Builder(context, "ChannelID")
+//                                .setSmallIcon(R.drawable.ic_launcherx)
+//                                .setContentTitle(responseList.get(i).getTitle())
+//                                .setContentText(responseList.get(i).getContent())
+//                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                                .build();
+//
+//                        notificationManagerCompat.notify(i, notification);
+//
+//
+//                    Log.d(TAG, "onResponse: list size" + responseList.size());
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<NewsResponse> call, Throwable t) {
+//                    Log.d(TAG, "onFailure: " + t.getCause());
+//                }
+//            });
 
 
             Log.d(TAG, "Job Finished: ");
