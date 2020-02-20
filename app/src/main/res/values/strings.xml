@@ -98,4 +98,7 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="dialog_title">Do you like our application?</string>
+
+
+    <string name="available_news">Latest news are available</string>
 </resources>

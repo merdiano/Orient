@@ -61,4 +61,6 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="dialog_title">Вам нравиться наше приложение?</string>
+
+    <string name="available_news">Доступны свежие новости </string>
 </resources>

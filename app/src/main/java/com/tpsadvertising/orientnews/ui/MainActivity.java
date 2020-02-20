@@ -23,7 +23,6 @@ import androidx.transition.TransitionManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import androidx.core.view.GravityCompat;
@@ -35,17 +34,13 @@ import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.mindorks.placeholderview.PlaceHolderView;
 
 import com.tpsadvertising.orientnews.AppRater;
 import com.tpsadvertising.orientnews.JobService;
-import com.tpsadvertising.orientnews.NewsResponse;
 import com.tpsadvertising.orientnews.R;
-import com.tpsadvertising.orientnews.RetrofitClient;
-import com.tpsadvertising.orientnews.api.ListingResponse;
 import com.tpsadvertising.orientnews.data.NetworkState;
 import com.tpsadvertising.orientnews.data.Status;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
@@ -67,9 +62,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @PerActivity
 public class MainActivity extends BaseActivity<MainActivityViewModel>
@@ -104,7 +96,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     private Disposable internetDisposable;
     private DrawyerMenuItem allPosts;
 
-    int postid;
+
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +109,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setupDrawyer();
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = pref.edit();
 
 //        loading.getIndeterminateDrawable()
 //                .setColorFilter(getResources().getColor(R.color.colorAccent),
@@ -136,7 +133,11 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         viewModel.getCategories().observe(this,this::fillDrawyer);
 
-        viewModel.postListOffline.observe(this, posts -> adapter.submitPosts(posts));
+        viewModel.postListOffline.observe(this, posts -> {
+            adapter.submitPosts(posts);
+            getLastJobId();
+            grid.scrollToPosition(0);
+        });
 
         viewModel.networkState.observe(this, networkState -> {
             adapter.setNetworkState(networkState);
@@ -199,7 +200,10 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                     swipeRefreshLayout.setRefreshing(false);
                 else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
                     swipeRefreshLayout.setRefreshing(true);
+                getLastJobId();
+
             }), 2000);
+
             grid.scrollToPosition(0);
         });
 
@@ -209,32 +213,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
 
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = pref.edit();
 
-        new Thread(() -> {
-            Post post = viewModel.getLastPost();
-            Log.d(TAG, "onCreate: " + post.id);
-            editor.putInt("postid", 41453);
-            editor.apply();
-        }).start();
 
-//        Call<NewsResponse> call = RetrofitClient.getmInstance().getApi().getPostsForNotifiaction(41460,5);
-//        call.enqueue(new Callback<NewsResponse>() {
-//            @Override
-//            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-//                Log.d(TAG, "onResponse: " + response.code());
-////                    responseList = response.body().posts;
-//
-////                Log.d(TAG, "onResponse: list size" + responseList.size());
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NewsResponse> call, Throwable t) {
-//                Log.d(TAG, "onFailure: " + t.getCause());
-//            }
-//        });
+
 
 
         startBackgroundService();
@@ -424,14 +405,12 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
     private void startBackgroundService(){
 
-
-
         ComponentName componentName = new ComponentName(this, JobService.class);
         JobInfo jobInfo = new JobInfo.Builder(123, componentName)
-                .setRequiresCharging(true)
-                .setPeriodic(2 * 60 * 1000)
+                .setRequiresCharging(false)
+                .setPeriodic(24 * 60 * 60 * 1000)
                 .setPersisted(true)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .build();
         JobScheduler jobScheduler = (JobScheduler)getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = jobScheduler.schedule(jobInfo);
@@ -442,5 +421,24 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         else {
             Log.d(TAG, "Job Scheduling failed");
         }
+    }
+
+    private void getLastJobId(){
+//        new Thread(() -> {
+//
+//        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Post post = new Post();
+
+                post = viewModel.getLastPost();
+
+                editor.putInt("postid", post.id);
+                editor.apply();
+            }
+        });
+
     }
 }

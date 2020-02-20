@@ -1,7 +1,5 @@
 package com.tpsadvertising.orientnews.api;
 
-import com.tpsadvertising.orientnews.NewsResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -48,9 +46,4 @@ public interface OrientNewsService {
 //                                        @Query("categoryid") Integer categoryId,
                                         @Query("count") Integer count);
 
-
-    @GET("get_posts_up")
-    Call<NewsResponse> getPostsForNotifiaction(@Query("postid") Integer postId,
-//                                        @Query("categoryid") Integer categoryId,
-                                               @Query("count") Integer count);
 }

@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
+import com.tpsadvertising.orientnews.JobService;
 import com.tpsadvertising.orientnews.OrientApplication;
 import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.api.PushService;
@@ -69,6 +70,10 @@ public abstract class OrientAppModule {
     @PerActivity
     @ContributesAndroidInjector(modules = NetworkModule.class)
     abstract PushService contributeMyService();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = NetworkModule.class)
+    abstract JobService contributeMyJobService();
 
     @PerActivity
     @ContributesAndroidInjector(modules = SearchActivityModule.class)
