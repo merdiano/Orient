@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import butterknife.BindView;
@@ -123,6 +125,16 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//        if (pref.getBoolean("firstrun", true)) {
+//            startActivity(new Intent(MainActivity.this, LanguageActivity.class));
+//            finish();
+//        }
+//
+//        loadLocale();
+
         try {
             setupDrawyer();
         } catch (NoSuchFieldException e) {
@@ -131,7 +143,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             e.printStackTrace();
         }
 
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
+
         editor = pref.edit();
 
 //        loading.getIndeterminateDrawable()
@@ -526,4 +538,30 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         });
 
     }
+
+    private void setLocale(String lang) {
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+        editor.putString("lang", lang);
+        editor.apply();
+
+    }
+
+    private void loadLocale() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String lang = sharedPreferences.getString("lang", "");
+        setLocale(lang);
+    }
+
+    private void changeFirstTime(){
+        SharedPreferences.Editor editor = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE).edit();
+        editor.putBoolean("firstrun", false).apply();
+    }
+
 }

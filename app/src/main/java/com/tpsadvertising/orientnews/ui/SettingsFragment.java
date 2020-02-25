@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreferenceCompat;
 import android.util.Log;
@@ -62,6 +63,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         PreferenceScreen versionPref = (PreferenceScreen) findPreference(KEY_VERSION);
         PreferenceScreen privacyPref = (PreferenceScreen) findPreference(KEY_PRIVACY);
 
+//        loadLocale();
+
         privacyPref.setOnPreferenceClickListener(preference -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(PRIVACY_URL));
@@ -107,9 +110,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
             ListPreference langPref = (ListPreference)findPreference(key);
             String lang = langPref.getValue();
-            Configuration cfg = new Configuration();
-            cfg.locale = new Locale(lang);
-            this.getResources().updateConfiguration(cfg,null);
+            setLocale(lang);
+//            Configuration cfg = new Configuration();
+//            cfg.locale = new Locale(lang);
+//            this.getResources().updateConfiguration(cfg,null);
 
             Log.d("Lang", "onSharedPreferenceChanged: " + lang);
 
@@ -150,5 +154,25 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .getPackageInfo(getActivity().getPackageName(), 0);
         String version = pInfo.versionName;
         return version;
+    }
+
+    private void setLocale(String lang) {
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+        editor.putString("lang", lang);
+        editor.apply();
+
+    }
+
+    private void loadLocale() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String lang = sharedPreferences.getString("lang", "");
+        setLocale(lang);
     }
 }
