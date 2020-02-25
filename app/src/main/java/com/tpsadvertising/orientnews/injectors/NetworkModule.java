@@ -1,5 +1,11 @@
 package com.tpsadvertising.orientnews.injectors;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -7,9 +13,14 @@ import com.google.gson.GsonBuilder;
 import com.tpsadvertising.orientnews.api.NewsService;
 import com.tpsadvertising.orientnews.api.OrientNewsService;
 import com.tpsadvertising.orientnews.api.ReklamaService;
+import com.tpsadvertising.orientnews.ui.MainActivity;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import androidx.core.os.LocaleListCompat;
+import androidx.preference.PreferenceManager;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
@@ -23,6 +34,10 @@ public abstract class NetworkModule {
     private static final String ENDPOINT = "https://www.orient.tm/api/core/";
     private static final String ADVERTSPOINT ="http://tpsadvertising.com/api/" ;
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";//2018-06-09 17:17:33
+
+
+//    @Inject SharedPreferences preferences;
+
 //    @Provides
 //    @Singleton
 //    static Retrofit provideRetrofit(Gson gson) {
@@ -43,7 +58,10 @@ public abstract class NetworkModule {
     @Provides
     static Retrofit provideRetrofit(Gson gson){
         String lang = Locale.getDefault().getLanguage();
+
+
         Log.d("Lang", "provideRetrofit: " + lang);
+
         //todo problemly dil uytgese garyshyara
         String base_url = lang.equals("en")?ENDPOINT+"en/":ENDPOINT;
         return new Retrofit.Builder()

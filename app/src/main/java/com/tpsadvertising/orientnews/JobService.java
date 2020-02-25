@@ -58,6 +58,8 @@ public class JobService extends android.app.job.JobService {
     @Inject @Named("defaultPrefs")
     SharedPreferences preferences;
 
+    Post post = new Post();
+
     @Override
     public boolean onStartJob(JobParameters params) {
         AndroidInjection.inject(this);
@@ -89,10 +91,14 @@ public class JobService extends android.app.job.JobService {
                     return;
                 }
 
-                Post post = postRepository.getLastPost();
-                int postId = post.id;
-                Log.d(TAG, "doBackgroundWork: post id " + postId);
+                post = postRepository.getLastPost();
+                int postId = 0;
 
+                if (post != null) {
+
+                    postId = post.id;
+                }
+                Log.d(TAG, "doBackgroundWork: post id " + postId);
                 Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 20);
                 call1.enqueue(new Callback<ListingResponse>() {
                     @Override
@@ -100,71 +106,80 @@ public class JobService extends android.app.job.JobService {
                         Log.d(TAG, "onResponse: " + response.code());
                         responseList = response.body().posts;
 
-                        String content = "";
+                        if (!responseList.isEmpty()){
+                            Log.d(TAG, "onResponse: list size " + responseList.size());
 
-                        if (responseList.size() < 5){
-                            for (int i = 0; i < 5; i++){
-
-                                int finalI = i;
-                                executor.execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Post post = response.body().posts.get(finalI);
-
-                                        postRepository.insertPost(post);
-                                    }
-                                });
+                            String content = "";
 
 
+                            if (responseList.size() > 5){
+                                for (int i = 0; i < 5; i++){
 
-                                content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                    int finalI = i;
+                                    executor.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Post post1 = response.body().posts.get(finalI);
+
+                                            postRepository.insertPost(post1);
+                                        }
+                                    });
+
+
+
+                                    content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                }
+                            }else {
+                                for (int i = 0; i < responseList.size(); i++){
+
+                                    int finalI = i;
+                                    executor.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Post post = response.body().posts.get(finalI);
+
+                                            postRepository.insertPost(post);
+                                        }
+                                    });
+
+
+
+                                    content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                }
                             }
-                        }else {
-                            for (int i = 0; i < responseList.size(); i++){
 
-                                int finalI = i;
-                                executor.execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Post post = response.body().posts.get(finalI);
+                            Log.d(TAG, "onResponse: " + content);
 
-                                        postRepository.insertPost(post);
-                                    }
-                                });
+                            Intent intent = new Intent(context, MainActivity.class);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
-
-                                content +=  (i+1) + ". " + responseList.get(i).title + "\n";
-                            }
-                        }
-
-                        Intent intent = new Intent(context, MainActivity.class);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                        Notification notification = new NotificationCompat.Builder(context, "ChannelID")
-                                .setSmallIcon(R.drawable.ic_launcherx)
-                                .setContentTitle("Orient News")
-                                .setContentText(context.getResources().getString(R.string.available_news))
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                                .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
-                                .setAutoCancel(true)
-                                .setContentIntent(pendingIntent)
-                                .build();
+                            Notification notification = new NotificationCompat.Builder(context, "ChannelID")
+                                    .setSmallIcon(R.drawable.ic_launcherx)
+                                    .setContentTitle("Orient News")
+                                    .setContentText(context.getResources().getString(R.string.available_news))
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
+                                    .setAutoCancel(true)
+                                    .setContentIntent(pendingIntent)
+                                    .build();
 
 //                        Log.d(TAG, "onResponse: " + content);
 
-                        if(preferences.contains(SettingsFragment.KEY_PUSH)){
-                            boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
-                            if(pushIsActive)
-                                showNotification(context, content, intent);
+                            if(preferences.contains(SettingsFragment.KEY_PUSH)){
+                                boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
+                                if(pushIsActive)
+                                    showNotification(context, content, intent);
 //                                notificationManagerCompat.notify(1, notification);
 
+                            }
                         }
 
 
 
-                        Log.d(TAG, "onResponse: list size" + responseList.size());
+
+
+
                     }
 
                     @Override

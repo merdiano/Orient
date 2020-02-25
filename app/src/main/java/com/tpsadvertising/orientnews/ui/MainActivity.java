@@ -114,8 +114,10 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     private DrawyerMenuItem allPosts;
 
 
-    SharedPreferences pref;
+    public static SharedPreferences pref;
     SharedPreferences.Editor editor;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +182,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         viewModel.postListOffline.observe(this, posts -> {
             adapter.submitPosts(posts);
             getLastJobId();
-            grid.scrollToPosition(0);
+            grid.smoothScrollToPosition(0);
         });
 
         viewModel.networkState.observe(this, networkState -> {
@@ -260,23 +262,12 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
 
 
-        setAlarm();
+//        setAlarm();
 
-//        startBackgroundService(this);
+        startBackgroundService(this);
 
     }
 
-    private class CustomTask extends AsyncTask<Void, Void, Void> {
-
-        protected Void doInBackground(Void... param) {
-            //Do some work
-            return null;
-        }
-
-        protected void onPostExecute(Void param) {
-            //Print Toast or open dialog
-        }
-    }
 
     private void setupDrawyer() throws NoSuchFieldException, IllegalAccessException {
         allPosts = new DrawyerMenuItem(getApplicationContext(),R.string.all_categories);
@@ -509,7 +500,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         JobInfo jobInfo = new JobInfo.Builder(123, componentName)
                 .setRequiresCharging(false)
                 .setPersisted(true)
-                .setPeriodic(15 * 60 * 1000)
+//                .setPeriodic(1 * 60 * 1000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .build();
         JobScheduler jobScheduler = (JobScheduler)context.getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);

@@ -101,4 +101,7 @@
 
 
     <string name="available_news">Latest news are available</string>
+    <string name="restart">Please restart application to change language</string>
+
+
 </resources>

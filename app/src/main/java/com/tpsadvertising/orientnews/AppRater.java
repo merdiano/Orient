@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -60,7 +61,17 @@ public class AppRater {
         TextView noBtn = customLayout.findViewById(R.id.dialog_rating_button_negative);
 
         AlertDialog dialog = builder.create();
-        dialog.show();
+
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.show();
+
+            }
+        },100);
+
+
 
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override

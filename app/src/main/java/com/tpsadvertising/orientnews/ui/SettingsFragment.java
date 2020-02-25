@@ -18,7 +18,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreferenceCompat;
+
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.room.AppDatabase;
@@ -50,6 +53,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     Executor executor;
     @Inject
     AppDatabase database;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.app_preferences);
@@ -87,6 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             langPref.setSummary(getResources().getString(R.string.lang_ru));
         else
             langPref.setSummary(getResources().getString(R.string.lang_en));
+
     }
 
     @Override
@@ -118,6 +123,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
             Log.d("Lang", "onSharedPreferenceChanged: " + lang);
 
             clearDatabase();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.restart) , Toast.LENGTH_SHORT).show();
 
             getActivity().recreate();
             getActivity().setResult(Activity.RESULT_OK,getActivity().getIntent());// set ok to trigger mainActivity restart
@@ -174,5 +192,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String lang = sharedPreferences.getString("lang", "");
         setLocale(lang);
+    }
+
+    public void restartActivity(){
+        Intent mIntent = getActivity().getIntent();
+        getActivity().finish();
+        startActivity(mIntent);
     }
 }

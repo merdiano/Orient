@@ -63,4 +63,6 @@
     <string name="dialog_title">Вам нравиться наше приложение?</string>
 
     <string name="available_news">Доступны свежие новости </string>
+
+    <string name="restart">Пожалуйста, перезапустите приложение, чтобы изменить языкe</string>
 </resources>
