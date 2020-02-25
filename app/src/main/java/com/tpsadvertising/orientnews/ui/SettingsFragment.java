@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         PreferenceScreen versionPref = (PreferenceScreen) findPreference(KEY_VERSION);
         PreferenceScreen privacyPref = (PreferenceScreen) findPreference(KEY_PRIVACY);
 
-//        loadLocale();
+        loadLocale();
 
         privacyPref.setOnPreferenceClickListener(preference -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -189,8 +189,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     private void loadLocale() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String lang = sharedPreferences.getString("lang", "");
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String lang = sharedPreferences.getString("lang", "");
+        String lang = Locale.getDefault().getLanguage();
         setLocale(lang);
     }
 

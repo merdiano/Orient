@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadLocale();
         super.onCreate(savedInstanceState);
         setTheme(R.style.OrientTheme);
         setContentView(R.layout.activity_main);
@@ -129,13 +130,8 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//        if (pref.getBoolean("firstrun", true)) {
-//            startActivity(new Intent(MainActivity.this, LanguageActivity.class));
-//            finish();
-//        }
-//
-//        loadLocale();
+
+
 
         try {
             setupDrawyer();
@@ -543,10 +539,10 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         editor.apply();
 
     }
-
     private void loadLocale() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String lang = sharedPreferences.getString("lang", "");
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String lang = sharedPreferences.getString("lang", "");
+        String lang = Locale.getDefault().getLanguage();
         setLocale(lang);
     }
 
