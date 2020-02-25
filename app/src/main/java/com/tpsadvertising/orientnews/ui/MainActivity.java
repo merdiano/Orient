@@ -19,6 +19,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.customview.widget.ViewDragHelper;
 import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
 import androidx.preference.PreferenceManager;
@@ -65,6 +66,7 @@ import com.tpsadvertising.orientnews.ui.views.HomeGridItemAnimator;
 import com.tpsadvertising.orientnews.utils.NetworkUtils;
 import com.tpsadvertising.orientnews.viewmodels.MainActivityViewModel;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -121,7 +123,13 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setupDrawyer();
+        try {
+            setupDrawyer();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = pref.edit();
@@ -144,7 +152,18 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 //        });
         NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
 
-        viewModel.getCategories().observe(this,this::fillDrawyer);
+        viewModel.getCategories().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(List<Category> categories) {
+                try {
+                    fillDrawyer(categories);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         viewModel.postListOffline.observe(this, posts -> {
             adapter.submitPosts(posts);
@@ -231,7 +250,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         setAlarm();
 
-//        startBackgroundService();
+//        startBackgroundService(this);
 
     }
 
@@ -247,7 +266,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         }
     }
 
-    private void setupDrawyer(){
+    private void setupDrawyer() throws NoSuchFieldException, IllegalAccessException {
         allPosts = new DrawyerMenuItem(getApplicationContext(),R.string.all_categories);
         allPosts.setItemCallback(MainActivity.this);
         DrawyerMenuItem favorites = new DrawyerMenuItem(getApplicationContext(),R.string.favorite_posts);
@@ -265,11 +284,28 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+
+
         drawer.addDrawerListener(toggle);
+
+        Field mDragger = drawer.getClass().getDeclaredField(
+                "mLeftDragger");//mRightDragger for right obviously
+        mDragger.setAccessible(true);
+        ViewDragHelper draggerObj = (ViewDragHelper) mDragger
+                .get(drawer);
+
+        Field mEdgeSize = draggerObj.getClass().getDeclaredField(
+                "mEdgeSize");
+        mEdgeSize.setAccessible(true);
+        int edge = mEdgeSize.getInt(draggerObj)/2;
+
+        mEdgeSize.setInt(draggerObj, edge * 5);
         toggle.syncState();
     }
 
-    private void fillDrawyer(List<Category> categories){
+    private void fillDrawyer(List<Category> categories) throws NoSuchFieldException, IllegalAccessException {
         if(categories == null || categories.isEmpty())return;
         mDrawyerView.removeAllViews();
         setupDrawyer();
@@ -442,17 +478,37 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         //creating a new intent specifying the broadcast receiver
         Intent i = new Intent(this, MyAlarm.class);
-
+        i.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         //creating a pending intent using the intent
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (calendar.before(Calendar.getInstance())){
             calendar.add(Calendar.DATE, 1);
         }
 
         //setting the repeating alarm that will be fired every day
-        am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+        am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
 
+    }
+
+    private void startBackgroundService(Context context){
+
+        ComponentName componentName = new ComponentName(context, JobService.class);
+        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
+                .setRequiresCharging(false)
+                .setPersisted(true)
+                .setPeriodic(15 * 60 * 1000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build();
+        JobScheduler jobScheduler = (JobScheduler)context.getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = jobScheduler.schedule(jobInfo);
+
+        if (resultCode == JobScheduler.RESULT_SUCCESS){
+            Log.d(TAG, "Job Scheduled");
+        }
+        else {
+            Log.d(TAG, "Job Scheduling failed");
+        }
     }
 
     private void getLastJobId(){

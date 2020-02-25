@@ -110,6 +110,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
             Configuration cfg = new Configuration();
             cfg.locale = new Locale(lang);
             this.getResources().updateConfiguration(cfg,null);
+
+            Log.d("Lang", "onSharedPreferenceChanged: " + lang);
+
             clearDatabase();
 
             getActivity().recreate();
@@ -118,12 +121,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     }
     private void clearDatabase(){
-        executor.execute(()->{
-            try {
-                database.clearAllTables();
-            }
-            catch (Exception ex){
-//                Log.d("PostRepository update",ex.getLocalizedMessage());
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    database.clearAllTables();
+                }
+                catch (Exception ex){
+                    Log.e("PostRepository update",ex.getLocalizedMessage());
+                }
             }
         });
     }

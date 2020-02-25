@@ -42,9 +42,10 @@ public class CategoryRepository {
 
     public void refreshCategories(){
 
-        executor.execute(()->{
-
-            try {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
 //                if(categoryDao.count()==0) {
                     Response<CategoriesWrapper> response = webService.getCategories().execute();
                     if (response.isSuccessful() && response.body() != null) {
@@ -55,8 +56,9 @@ public class CategoryRepository {
                         }
                     }
 //                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

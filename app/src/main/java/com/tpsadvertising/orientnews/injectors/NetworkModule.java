@@ -1,5 +1,7 @@
 package com.tpsadvertising.orientnews.injectors;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tpsadvertising.orientnews.api.NewsService;
@@ -41,7 +43,7 @@ public abstract class NetworkModule {
     @Provides
     static Retrofit provideRetrofit(Gson gson){
         String lang = Locale.getDefault().getLanguage();
-
+        Log.d("Lang", "provideRetrofit: " + lang);
         //todo problemly dil uytgese garyshyara
         String base_url = lang.equals("en")?ENDPOINT+"en/":ENDPOINT;
         return new Retrofit.Builder()

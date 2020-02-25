@@ -1,111 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.tpsadvertising.orientnews.ui.DetailActivity"
-    tools:showIn="@layout/activity_detail">
+    tools:showIn="@layout/activity_detail"
+    android:id="@+id/myview">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:transitionGroup="false"
+        android:background="@android:color/transparent"
         android:paddingBottom="@dimen/padding_normal"
-        android:background="@android:color/transparent">
+        android:transitionGroup="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
         <TextView
             android:id="@+id/shot_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_room_for_fab"
             android:paddingStart="@dimen/padding_normal"
             android:paddingTop="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_room_for_fab"
+            android:paddingBottom="@dimen/padding_normal"
             android:textAppearance="@style/TextAppearance.DribbbleShotTitle"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Post title"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Post title" />
+
         <TextView
+            android:id="@+id/post_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/post_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shot_title"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/spacing_large"
-            android:paddingEnd="@dimen/padding_normal"
             android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
             android:textAppearance="@style/TextAppearance.DribbbleShotDescription"
             android:textColorHighlight="@color/dribbble_link_highlight"
-            android:textColorLink="@color/dribbble_links"/>
+            android:textColorLink="@color/dribbble_links"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shot_title" />
         <!--<Button-->
-            <!--android:id="@+id/shot_like_count"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintEnd_toStartOf="@id/shot_view_count"-->
-            <!--app:layout_constraintTop_toBottomOf="@id/post_content"-->
-            <!--app:layout_constraintHorizontal_weight="1"-->
-            <!--android:layout_marginTop="@dimen/spacing_large"-->
-            <!--android:drawableTop="@drawable/avd_likes"-->
-            <!--android:background="@null"-->
-            <!--tools:text="33 likes"-->
-            <!--style="@style/Widget.Plaid.InlineActionButton" />-->
+        <!--android:id="@+id/shot_like_count"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintEnd_toStartOf="@id/shot_view_count"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/post_content"-->
+        <!--app:layout_constraintHorizontal_weight="1"-->
+        <!--android:layout_marginTop="@dimen/spacing_large"-->
+        <!--android:drawableTop="@drawable/avd_likes"-->
+        <!--android:background="@null"-->
+        <!--tools:text="33 likes"-->
+        <!--style="@style/Widget.Plaid.InlineActionButton" />-->
 
         <Button
             android:id="@+id/shot_view_count"
+            style="@style/Widget.Plaid.InlineActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableTop="@drawable/avd_views"
+            app:layout_constraintEnd_toStartOf="@id/shot_share_action"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/post_content"
-            app:layout_constraintStart_toEndOf="@id/shot_like_count"
-            app:layout_constraintEnd_toStartOf="@id/shot_share_action"
-            app:layout_constraintBaseline_toBaselineOf="@id/shot_like_count"
-            app:layout_constraintHorizontal_weight="1"
-            android:drawableTop="@drawable/avd_views"
-            android:background="@null"
-            tools:text="33 views"
-            style="@style/Widget.Plaid.InlineActionButton" />
+            tools:text="33 views" />
 
         <Button
             android:id="@+id/shot_share_action"
+            style="@style/Widget.Plaid.InlineActionButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/shot_view_count"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/shot_view_count"
-            app:layout_constraintHorizontal_weight="1"
             android:drawableTop="@drawable/avd_share"
             android:text="@string/share"
-            style="@style/Widget.Plaid.InlineActionButton" />
+            app:layout_constraintBaseline_toBaselineOf="@id/shot_view_count"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/shot_view_count" />
 
         <TextView
             android:id="@+id/player_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/player_avatar"
-            app:layout_constraintTop_toBottomOf="@id/shot_view_count"
             android:layout_marginTop="@dimen/padding_normal"
             android:layout_marginEnd="@dimen/avatar_margin"
-            android:paddingStart="@dimen/padding_normal"
+            android:clickable="false"
             android:gravity="end"
+            android:paddingStart="@dimen/padding_normal"
             android:paddingTop="@dimen/spacing_normal"
             android:textAppearance="@style/TextAppearance.CommentAuthor"
-            android:clickable="false"
+            app:layout_constraintEnd_toStartOf="@id/player_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shot_view_count"
             tools:text="—Orient" />
 
         <TextView
             android:id="@+id/shot_time_ago"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/player_avatar"
-            app:layout_constraintTop_toBottomOf="@id/player_name"
-            android:paddingStart="@dimen/padding_normal"
             android:gravity="end"
+            android:paddingStart="@dimen/padding_normal"
             android:textAppearance="@style/TextAppearance.CommentTimestamp"
+            app:layout_constraintEnd_toStartOf="@id/player_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/player_name"
             tools:text="3 hours ago" />
 
         <ImageView
@@ -113,12 +119,12 @@
             android:layout_width="@dimen/avatar_bounds"
             android:layout_height="@dimen/avatar_bounds"
             android:layout_marginEnd="@dimen/padding_normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_name"
-            app:layout_constraintBottom_toBottomOf="@id/player_name"
+            android:foreground="@drawable/avatar_ripple"
             android:padding="@dimen/avatar_padding"
             android:src="@drawable/avatar_placeholder"
-            android:foreground="@drawable/avatar_ripple" />
+            app:layout_constraintBottom_toBottomOf="@id/player_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/player_name" />
 
         <ProgressBar
             android:id="@android:id/empty"
@@ -133,4 +139,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.core.widget.NestedScrollView>

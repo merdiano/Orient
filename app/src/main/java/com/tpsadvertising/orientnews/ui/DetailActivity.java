@@ -1,6 +1,7 @@
 package com.tpsadvertising.orientnews.ui;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ShareCompat;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.palette.graphics.Palette;
@@ -67,7 +69,7 @@ import static com.tpsadvertising.orientnews.utils.AnimUtils.getFastOutSlowInInte
  * Created by merdan on 8/22/18.
  */
 @PerActivity
-public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
+public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
     private static final int SHARE_REQUEST_CODE = 1233;
     public final static String EXTRA_POST = "EXTRA_POST";
     public final static String RESULT_EXTRA_POST_ID = "RESULT_EXTRA_POST_ID";
@@ -84,7 +86,10 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
     @BindDimen(R.dimen.large_avatar_size) int largeAvatarSize;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(android.R.id.empty)ProgressBar loading;
-//    private Post post;
+
+
+    //    private Post post;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +114,6 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
                         PorterDuff.Mode.SRC_IN);
         loading.setVisibility(View.VISIBLE);
 
-
         viewModel.post.observe(this,this::bindPost);
 
         viewModel.prevPost.observe(this,it -> {
@@ -128,6 +132,9 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
 //                menuItem.setEnabled(false);
 
         });
+
+
+
     }
 
     @Override
@@ -203,6 +210,7 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
                     .override(post.thumbnail_images.mediumWidh, post.thumbnail_images.mediumHeght)
                     .transition(withCrossFade())
                     .into(imageView);
+
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -418,4 +426,6 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel>{
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
     }
+
+
 }

@@ -62,11 +62,11 @@
     <string name="dialog_title_language">Choose language</string>
     <string name="lang_ru" translatable="false">Русский</string>
     <string name="lang_en" translatable="false">English</string>
-    <string-array translatable="false" name="entries_language" >
+    <string-array name="entries_language" translatable="false">
         <item>English</item>
         <item>Русский</item>
     </string-array>
-    <string-array translatable="false" name="entryvalues_language">
+    <string-array name="entryvalues_language" translatable="false">
         <item>en</item>
         <item>ru</item>
     </string-array>
@@ -81,7 +81,7 @@
         <item>XLarge</item>
 
     </string-array>
-    <string-array translatable="false" name="entryvalues_font_size">
+    <string-array name="entryvalues_font_size" translatable="false">
         <item>very_small_text</item>
         <item>small_text</item>
         <item>medium_text</item>

@@ -1,7 +1,10 @@
 package com.tpsadvertising.orientnews;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.app.job.JobParameters;
 import android.content.Context;
 import android.content.Intent;
@@ -77,86 +80,98 @@ public class JobService extends android.app.job.JobService {
     private void doBackgroundWork(JobParameters params) {
 
 
-        new Thread(() -> {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
 
-            if (jobCancelled){
-                return;
-            }
-
-            Post post = postRepository.getLastPost();
-            int postId = post.id;
-            Log.d(TAG, "doBackgroundWork: post id " + postId);
-
-            Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 20);
-            call1.enqueue(new Callback<ListingResponse>() {
-                @Override
-                public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
-                    Log.d(TAG, "onResponse: " + response.code());
-                    responseList = response.body().posts;
-
-                    String content = "";
-
-                    if (responseList.size() < 5){
-                        for (int i = 0; i < 5; i++){
-
-                            int finalI = i;
-                            executor.execute(() -> {
-                                Post post = response.body().posts.get(finalI);
-
-                                postRepository.insertPost(post);
-                            });
-
-
-
-                            content +=  (i+1) + ". " + responseList.get(i).title + "\n";
-                        }
-                    }else {
-                        for (int i = 0; i < responseList.size(); i++){
-
-                            int finalI = i;
-                            executor.execute(() -> {
-                                Post post = response.body().posts.get(finalI);
-
-                                postRepository.insertPost(post);
-                            });
-
-
-
-                            content +=  (i+1) + ". " + responseList.get(i).title + "\n";
-                        }
-                    }
-
-                    Intent intent = new Intent(context, MainActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    Notification notification = new NotificationCompat.Builder(context, "ChannelID")
-                            .setSmallIcon(R.drawable.ic_launcherx)
-                            .setContentTitle("Orient News")
-                            .setContentText(context.getResources().getString(R.string.available_news))
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
-                            .setAutoCancel(true)
-                            .setContentIntent(pendingIntent)
-                            .build();
-
-                    if(preferences.contains(SettingsFragment.KEY_PUSH)){
-                        boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
-                        if(pushIsActive)
-                            notificationManagerCompat.notify(1, notification);
-                    }
-
-
-
-                    Log.d(TAG, "onResponse: list size" + responseList.size());
+                if (jobCancelled){
+                    return;
                 }
 
-                @Override
-                public void onFailure(Call<ListingResponse> call, Throwable t) {
-                    Log.d(TAG, "onFailure: " + t.getCause());
-                }
-            });
+                Post post = postRepository.getLastPost();
+                int postId = post.id;
+                Log.d(TAG, "doBackgroundWork: post id " + postId);
+
+                Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 20);
+                call1.enqueue(new Callback<ListingResponse>() {
+                    @Override
+                    public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
+                        Log.d(TAG, "onResponse: " + response.code());
+                        responseList = response.body().posts;
+
+                        String content = "";
+
+                        if (responseList.size() < 5){
+                            for (int i = 0; i < 5; i++){
+
+                                int finalI = i;
+                                executor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Post post = response.body().posts.get(finalI);
+
+                                        postRepository.insertPost(post);
+                                    }
+                                });
+
+
+
+                                content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                            }
+                        }else {
+                            for (int i = 0; i < responseList.size(); i++){
+
+                                int finalI = i;
+                                executor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Post post = response.body().posts.get(finalI);
+
+                                        postRepository.insertPost(post);
+                                    }
+                                });
+
+
+
+                                content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                            }
+                        }
+
+                        Intent intent = new Intent(context, MainActivity.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        Notification notification = new NotificationCompat.Builder(context, "ChannelID")
+                                .setSmallIcon(R.drawable.ic_launcherx)
+                                .setContentTitle("Orient News")
+                                .setContentText(context.getResources().getString(R.string.available_news))
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
+                                .setAutoCancel(true)
+                                .setContentIntent(pendingIntent)
+                                .build();
+
+//                        Log.d(TAG, "onResponse: " + content);
+
+                        if(preferences.contains(SettingsFragment.KEY_PUSH)){
+                            boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
+                            if(pushIsActive)
+                                showNotification(context, content, intent);
+//                                notificationManagerCompat.notify(1, notification);
+
+                        }
+
+
+
+                        Log.d(TAG, "onResponse: list size" + responseList.size());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ListingResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getCause());
+                    }
+                });
 
 
 //            Call<NewsResponse> call = RetrofitClient.getmInstance().getApi().getPostsForNotifiaction(id,5);
@@ -188,11 +203,42 @@ public class JobService extends android.app.job.JobService {
 //            });
 
 
-            Log.d(TAG, "Job Finished: ");
-            jobFinished(params, false);
+                Log.d(TAG, "Job Finished: ");
+                jobFinished(params, false);
+            }
         }).start();
-
     }
 
+    public void showNotification(Context context,String body, Intent intent) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int notificationId = 1;
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_launcherx)
+                .setContentTitle("Orient News")
+                .setContentText(context.getResources().getString(R.string.available_news))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setAutoCancel(true);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        notificationManager.notify(notificationId, mBuilder.build());
+    }
 
 }

@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tpsadvertising.orientnews.ui.DetailActivity">
+    tools:context="com.tpsadvertising.orientnews.ui.DetailActivity"
+    android:id="@+id/view">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"

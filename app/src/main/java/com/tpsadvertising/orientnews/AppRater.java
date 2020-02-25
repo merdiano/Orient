@@ -16,8 +16,8 @@ import androidx.appcompat.app.AlertDialog;
 
 public class AppRater {
 
-    private final static int DAYS_UNTIL_PROMPT = 1;//1 Min number of days
-    private final static int LAUNCHES_UNTIL_PROMPT = 5;// 5 Min number of launches
+    private final static int DAYS_UNTIL_PROMPT = 0;//1 Min number of days
+    private final static int LAUNCHES_UNTIL_PROMPT = 0;// 5 Min number of launches
 
     public static void app_launched(Context mContext) {
         SharedPreferences prefs = mContext.getSharedPreferences("apprater", 0);
@@ -44,10 +44,8 @@ public class AppRater {
             }
         }
 
-        editor.commit();
+        editor.apply();
     }
-
-
 
     private static void showDialog(Context context, SharedPreferences.Editor editor){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -80,7 +78,6 @@ public class AppRater {
                 dialog.dismiss();
             }
         });
-
 
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override

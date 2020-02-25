@@ -15,17 +15,21 @@ import static android.content.Context.JOB_SCHEDULER_SERVICE;
 public class MyAlarm extends BroadcastReceiver {
 
     private static final String TAG = "JobService";
+
 //    Context context = new MainActivity();
 
     //the method will be fired when the alarm is triggerred
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        startBackgroundService(context);
+
         //you can check the log that it is fired
         //Here we are actually not doing anything
         //but you can do any task here that you want to be done at a specific time everyday
         Log.d("JobService", "Alarm just fired");
+        startBackgroundService(context);
     }
 
     private void startBackgroundService(Context context){

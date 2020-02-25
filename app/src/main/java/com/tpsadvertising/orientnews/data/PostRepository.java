@@ -83,13 +83,16 @@ public class PostRepository {
     }
 
     public void updatePost(Post post){
-        executor.execute(() -> {
-            try {
-                postDao.update(post);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    postDao.update(post);
 
-            }
-            catch (Exception ex){
+                }
+                catch (Exception ex){
 //                Log.d("PostRepository update",ex.getLocalizedMessage());
+                }
             }
         });
     }
@@ -182,12 +185,15 @@ public class PostRepository {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                 if(response.isSuccessful() && response.body().post!=null){
-                    executor.execute(() -> {
-                        Post oldPost = postDao.getPost(postId);
-                        Post newPost = response.body().post;
-                        if(oldPost != null)
-                            newPost.isFavorite = oldPost.isFavorite;
-                        insertPost(newPost);
+                    executor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Post oldPost = postDao.getPost(postId);
+                            Post newPost = response.body().post;
+                            if(oldPost != null)
+                                newPost.isFavorite = oldPost.isFavorite;
+                            insertPost(newPost);
+                        }
                     });
                 }
             }

@@ -3,9 +3,11 @@ package com.tpsadvertising.orientnews.ui.adapters;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -362,6 +364,7 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
             }catch (Exception e){
                 Log.e("PstLstAdptrOnItmVwClick",e.getLocalizedMessage());
             }
+
 //            setGridItemContentTransitions(holder.image);
 
 
@@ -498,6 +501,7 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
                     return oldPost.id == newPost.id;
                 }
 
+                @SuppressLint("DiffUtilEquals")
                 @Override
                 public boolean areContentsTheSame(Post oldPost,
                                                   Post newPost) {
