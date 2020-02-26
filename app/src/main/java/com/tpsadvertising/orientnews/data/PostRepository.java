@@ -207,12 +207,20 @@ public class PostRepository {
     }
 
     public Listing<Post> loadPostsOffline(){
+
+        DataSource.Factory<Integer,Post> datasourceFactory = postDao.loadPostsOffline();
         MutableLiveData<NetworkState> ntState= new MutableLiveData<>();
-        ntState.setValue(NetworkState.FAVORITE);
-        return new Listing<Post>(new LivePagedListBuilder<>(postDao.loadPostsOffline(),config)
+        return new Listing<Post>(new LivePagedListBuilder(datasourceFactory, config)
                 .build(),
                 ntState,
                 it->{return null;});
+
+
+//        ntState.setValue(NetworkState.FAVORITE);
+//        return new Listing<Post>(new LivePagedListBuilder<>(postDao.loadPostsOffline(),config)
+//                .build(),
+//                ntState,
+//                it->{return null;});
     }
 
     public Post getLastPost(){

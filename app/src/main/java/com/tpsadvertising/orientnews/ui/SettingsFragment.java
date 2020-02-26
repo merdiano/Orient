@@ -61,13 +61,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void onResume() {
+
+        loadLocale();
+
         super.onResume();
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
         PreferenceScreen versionPref = (PreferenceScreen) findPreference(KEY_VERSION);
         PreferenceScreen privacyPref = (PreferenceScreen) findPreference(KEY_PRIVACY);
 
-        loadLocale();
+
 
         privacyPref.setOnPreferenceClickListener(preference -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -87,10 +90,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
 
         ListPreference langPref = (ListPreference)findPreference(KEY_LANG);
-        if(langPref.getValue()!=null && langPref.getValue().equals("ru"))
-            langPref.setSummary(getResources().getString(R.string.lang_ru));
-        else
+//        if(langPref.getValue()!=null && langPref.getValue().equals("ru"))
+////            langPref.setSummary(getResources().getString(R.string.lang_ru));
+////        else
+////            langPref.setSummary(getResources().getString(R.string.lang_en));
+
+        String lang = Locale.getDefault().getLanguage();
+        if (lang.equals("en")){
             langPref.setSummary(getResources().getString(R.string.lang_en));
+        } else if (lang.equals("ru")) {
+            langPref.setSummary(getResources().getString(R.string.lang_ru));
+
+        }
 
     }
 

@@ -151,18 +151,18 @@ public class JobService extends android.app.job.JobService {
                             Log.d(TAG, "onResponse: " + content);
 
                             Intent intent = new Intent(context, MainActivity.class);
-                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                            Notification notification = new NotificationCompat.Builder(context, "ChannelID")
-                                    .setSmallIcon(R.drawable.ic_launcherx)
-                                    .setContentTitle("Orient News")
-                                    .setContentText(context.getResources().getString(R.string.available_news))
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
-                                    .setAutoCancel(true)
-                                    .setContentIntent(pendingIntent)
-                                    .build();
+//                            Notification notification = new NotificationCompat.Builder(context, "ChannelID")
+//                                    .setSmallIcon(R.drawable.ic_launcherx)
+//                                    .setContentTitle("Orient News")
+//                                    .setContentText(context.getResources().getString(R.string.available_news))
+//                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
+//                                    .setAutoCancel(true)
+//                                    .setContentIntent(pendingIntent)
+//                                    .build();
 
 //                        Log.d(TAG, "onResponse: " + content);
 
@@ -219,7 +219,7 @@ public class JobService extends android.app.job.JobService {
 
 
                 Log.d(TAG, "Job Finished: ");
-                jobFinished(params, false);
+                jobFinished(params, true);
             }
         }).start();
     }

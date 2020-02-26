@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -178,7 +179,13 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         viewModel.postListOffline.observe(this, posts -> {
             adapter.submitPosts(posts);
             getLastJobId();
-            grid.smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    grid.scrollToPosition(0);
+                }
+            }, 1000);
+
         });
 
         viewModel.networkState.observe(this, networkState -> {
@@ -246,7 +253,12 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
             }), 2000);
 
-            grid.scrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    grid.scrollToPosition(0);
+                }
+            }, 1000);
         });
 
 
@@ -255,12 +267,13 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
 
 
-
-
+        if (pref.getBoolean("firstrun", true)) {
+            startBackgroundService(this);
+        }
 
 //        setAlarm();
 
-        startBackgroundService(this);
+
 
     }
 
@@ -493,17 +506,35 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     private void startBackgroundService(Context context){
 
         ComponentName componentName = new ComponentName(context, JobService.class);
-        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
-                .setRequiresCharging(false)
-                .setPersisted(true)
-//                .setPeriodic(1 * 60 * 1000)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .build();
+//        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
+//                .setRequiresCharging(false)
+//                .setPersisted(true)
+//                .setPeriodic(20 * 60 * 1000)
+//                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//                .build();
+        JobInfo jobInfo;
+        int delay = 720 * 60* 1000;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            jobInfo = new JobInfo.Builder(123, componentName)
+                    .setMinimumLatency(delay)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .build();
+        } else {
+            jobInfo = new JobInfo.Builder(123, componentName)
+                    .setPeriodic(delay)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .build();
+        }
+
         JobScheduler jobScheduler = (JobScheduler)context.getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = jobScheduler.schedule(jobInfo);
 
         if (resultCode == JobScheduler.RESULT_SUCCESS){
             Log.d(TAG, "Job Scheduled");
+            changeFirstTime();
         }
         else {
             Log.d(TAG, "Job Scheduling failed");
@@ -547,7 +578,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     }
 
     private void changeFirstTime(){
-        SharedPreferences.Editor editor = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putBoolean("firstrun", false).apply();
     }
 

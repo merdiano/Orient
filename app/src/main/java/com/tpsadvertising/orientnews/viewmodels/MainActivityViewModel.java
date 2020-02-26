@@ -43,6 +43,7 @@ public class MainActivityViewModel extends ViewModel {
     public LiveData<PagedList<Post>> postList;
     public LiveData<PagedList<Post>> postListOffline;
     public LiveData<NetworkState> networkState;
+    public LiveData<NetworkState> networkStateOffline;
     public MutableLiveData<List<Reklama>> adverts = new MutableLiveData<>();
 //    public LiveData<PagedList<Post>> favoritePosts;
     @Inject
@@ -66,6 +67,8 @@ public class MainActivityViewModel extends ViewModel {
         postListOffline = Transformations.switchMap(repoResultOffline,input -> input.pagedList);
 
         networkState = Transformations.switchMap(repoResult,input -> input.networkState);
+
+        networkStateOffline = Transformations.switchMap(repoResultOffline,input -> input.networkState);
 //
 //        favoritePosts = Transformations.map(source,s->{
 //            if(s==0)
