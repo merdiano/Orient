@@ -264,12 +264,11 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         AppRater.app_launched(this);
 
+        startBackgroundService(this);
 
-
-
-        if (pref.getBoolean("firstrun", true)) {
-            startBackgroundService(this);
-        }
+//        if (pref.getBoolean("firstrun", true)) {
+//
+//        }
 
 //        setAlarm();
 
@@ -302,18 +301,18 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         drawer.addDrawerListener(toggle);
 
-        Field mDragger = drawer.getClass().getDeclaredField(
-                "mLeftDragger");//mRightDragger for right obviously
-        mDragger.setAccessible(true);
-        ViewDragHelper draggerObj = (ViewDragHelper) mDragger
-                .get(drawer);
-
-        Field mEdgeSize = draggerObj.getClass().getDeclaredField(
-                "mEdgeSize");
-        mEdgeSize.setAccessible(true);
-        int edge = mEdgeSize.getInt(draggerObj)/2;
-
-        mEdgeSize.setInt(draggerObj, edge * 5);
+//        Field mDragger = drawer.getClass().getDeclaredField(
+//                "mLeftDragger");//mRightDragger for right obviously
+//        mDragger.setAccessible(true);
+//        ViewDragHelper draggerObj = (ViewDragHelper) mDragger
+//                .get(drawer);
+//
+//        Field mEdgeSize = draggerObj.getClass().getDeclaredField(
+//                "mEdgeSize");
+//        mEdgeSize.setAccessible(true);
+//        int edge = mEdgeSize.getInt(draggerObj)/2;
+//
+//        mEdgeSize.setInt(draggerObj, edge * 5);
         toggle.syncState();
     }
 
@@ -513,28 +512,29 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 //                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
 //                .build();
         JobInfo jobInfo;
-        int delay = 720 * 60* 1000;
+        int delay = 600 * 60* 1000;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            jobInfo = new JobInfo.Builder(123, componentName)
-                    .setMinimumLatency(delay)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPersisted(true)
-                    .build();
-        } else {
-            jobInfo = new JobInfo.Builder(123, componentName)
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+//            jobInfo = new JobInfo.Builder(123, componentName)
+//                    .setMinimumLatency(delay)
+//                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//                    .setPersisted(true)
+//                    .build();
+//        } else {
+
+        jobInfo = new JobInfo.Builder(123, componentName)
                     .setPeriodic(delay)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setPersisted(true)
                     .build();
-        }
+
 
         JobScheduler jobScheduler = (JobScheduler)context.getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = jobScheduler.schedule(jobInfo);
 
         if (resultCode == JobScheduler.RESULT_SUCCESS){
             Log.d(TAG, "Job Scheduled");
-            changeFirstTime();
+//            changeFirstTime();
         }
         else {
             Log.d(TAG, "Job Scheduling failed");

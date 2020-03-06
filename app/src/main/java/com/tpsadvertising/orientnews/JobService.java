@@ -99,7 +99,7 @@ public class JobService extends android.app.job.JobService {
                     postId = post.id;
                 }
                 Log.d(TAG, "doBackgroundWork: post id " + postId);
-                Call<ListingResponse> call1 = newsService.getNewerPosts(41453, 20);
+                Call<ListingResponse> call1 = newsService.getNewerPosts(postId, 20);
                 call1.enqueue(new Callback<ListingResponse>() {
                     @Override
                     public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
@@ -151,34 +151,14 @@ public class JobService extends android.app.job.JobService {
                             Log.d(TAG, "onResponse: " + content);
 
                             Intent intent = new Intent(context, MainActivity.class);
-//                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//                            Notification notification = new NotificationCompat.Builder(context, "ChannelID")
-//                                    .setSmallIcon(R.drawable.ic_launcherx)
-//                                    .setContentTitle("Orient News")
-//                                    .setContentText(context.getResources().getString(R.string.available_news))
-//                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
-//                                    .setAutoCancel(true)
-//                                    .setContentIntent(pendingIntent)
-//                                    .build();
-
-//                        Log.d(TAG, "onResponse: " + content);
 
                             if(preferences.contains(SettingsFragment.KEY_PUSH)){
                                 boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
                                 if(pushIsActive)
                                     showNotification(context, content, intent);
-//                                notificationManagerCompat.notify(1, notification);
-
+//
                             }
                         }
-
-
-
-
-
 
                     }
 
@@ -188,38 +168,8 @@ public class JobService extends android.app.job.JobService {
                     }
                 });
 
-
-//            Call<NewsResponse> call = RetrofitClient.getmInstance().getApi().getPostsForNotifiaction(id,5);
-//            call.enqueue(new Callback<NewsResponse>() {
-//                @Override
-//                public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-//                    Log.d(TAG, "onResponse: " + response.code());
-//                    responseList = response.body().posts;
-//
-//                        Notification notification = new NotificationCompat.Builder(context, "ChannelID")
-//                                .setSmallIcon(R.drawable.ic_launcherx)
-//                                .setContentTitle(responseList.get(i).getTitle())
-//                                .setContentText(responseList.get(i).getContent())
-//                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                                .build();
-//
-//                        notificationManagerCompat.notify(i, notification);
-//
-//
-//                    Log.d(TAG, "onResponse: list size" + responseList.size());
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<NewsResponse> call, Throwable t) {
-//                    Log.d(TAG, "onFailure: " + t.getCause());
-//                }
-//            });
-
-
                 Log.d(TAG, "Job Finished: ");
-                jobFinished(params, true);
+                jobFinished(params, false);
             }
         }).start();
     }
@@ -242,6 +192,7 @@ public class JobService extends android.app.job.JobService {
                 .setSmallIcon(R.drawable.ic_launcherx)
                 .setContentTitle("Orient News")
                 .setContentText(context.getResources().getString(R.string.available_news))
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setAutoCancel(true);
 

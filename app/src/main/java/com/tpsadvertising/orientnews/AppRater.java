@@ -86,6 +86,11 @@ public class AppRater {
                             Uri.parse("http://play.google.com/store/apps/details?id=" + context.getPackageName())));
                 }
 
+                if (editor != null) {
+                    editor.putBoolean("dontshowagain", true);
+                    editor.commit();
+                }
+
                 dialog.dismiss();
             }
         });

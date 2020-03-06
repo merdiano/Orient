@@ -57,5 +57,5 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
 
-        app:srcCompat="@drawable/asl_fab_heart" />
+        app:srcCompat="@drawable/ic_bookmark_border_black_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

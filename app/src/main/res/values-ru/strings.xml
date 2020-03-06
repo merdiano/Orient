@@ -60,9 +60,9 @@
 
     <string name="no">Нет</string>
     <string name="yes">Да</string>
-    <string name="dialog_title">Вам нравиться наше приложение?</string>
+    <string name="dialog_title">Вам нравится наше приложение?</string>
 
     <string name="available_news">Доступны свежие новости </string>
 
-    <string name="restart">Пожалуйста, перезапустите приложение, чтобы изменить языкe</string>
+    <string name="restart">Пожалуйста, перезапустите приложение, чтобы изменить язык</string>
 </resources>
