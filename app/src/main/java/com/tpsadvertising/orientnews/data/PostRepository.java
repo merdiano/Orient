@@ -226,4 +226,8 @@ public class PostRepository {
     public Post getLastPost(){
         return postDao.getLastPost();
     }
+
+    public LiveData<Post> checkPostFavorite(int postId){
+        return postDao.checkPostFavorite(postId);
+    }
 }

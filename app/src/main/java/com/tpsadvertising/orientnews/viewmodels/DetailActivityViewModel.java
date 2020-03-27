@@ -52,5 +52,10 @@ public class DetailActivityViewModel extends ViewModel {
 
         postId.setValue(prevPost.getValue());
     }
+
+    public LiveData<Post> checkPostFavorite(int postId){
+        return repository.checkPostFavorite(postId);
+    }
+
 }
 

@@ -16,19 +16,23 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.core.app.ShareCompat;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Observer;
 import androidx.palette.graphics.Palette;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.Spannable;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -36,6 +40,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
@@ -86,7 +91,12 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
     @BindDimen(R.dimen.large_avatar_size) int largeAvatarSize;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(android.R.id.empty)ProgressBar loading;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
+    float x1, x2, y1, y2;
+
+    int postId;
 
     //    private Post post;
     @SuppressLint("ClickableViewAccessibility")
@@ -133,9 +143,45 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
 
         });
 
+        postId = getIntent().getIntExtra(EXTRA_POST,0);
+
+        viewModel.checkPostFavorite(postId).observe(this, new Observer<Post>() {
+            @Override
+            public void onChanged(Post post) {
+                boolean fav = post.isFavorite;
+
+                if (fav){
+                    fab.setImageDrawable(getDrawable(R.drawable.ic_bookmark_black_24dp));
+                }else {
+                    fab.setImageDrawable(getDrawable(R.drawable.ic_bookmark_border_black_24dp));
+                }
+            }
+        });
+
 
 
     }
+
+
+    public boolean onTouchEvent(MotionEvent touchEvent){
+        switch(touchEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = touchEvent.getX();
+                y1 = touchEvent.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = touchEvent.getX();
+                y2 = touchEvent.getY();
+                if(x1 < x2){
+                    Log.d("TAG", "onTouchEvent: swipe left");
+            }else if(x1 >  x2) {
+                    Log.d("TAG", "onTouchEvent: swipe right");
+                }
+            break;
+        }
+        return false;
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -147,7 +193,7 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
     @Override
     protected void onResume() {
         super.onResume();
-        int postId = getIntent().getIntExtra(EXTRA_POST,0);
+        postId = getIntent().getIntExtra(EXTRA_POST,0);
         viewModel.loadPost(postId);
     }
 

@@ -80,4 +80,7 @@ public interface PostDao {
     @Query("SELECT * FROM post ORDER BY id DESC LIMIT 1")
     Post getLastPost();
 
+    @Query ("Select * from Post Where id = :postId")
+    LiveData<Post> checkPostFavorite(int postId);
+
 }

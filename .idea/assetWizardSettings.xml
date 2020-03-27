@@ -28,9 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_bookmark_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Aman-PC" />
+                            <entry key="outputName" value="ic_bookmark_filled" />
+                            <entry key="sourceFile" value="C:\Users\Aman-PC\Downloads\bookmark (1).svg" />
                           </map>
                         </option>
                       </PersistentState>
