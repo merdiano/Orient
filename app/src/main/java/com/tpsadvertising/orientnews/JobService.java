@@ -99,74 +99,77 @@ public class JobService extends android.app.job.JobService {
                     postId = post.id;
                 }
                 Log.d(TAG, "doBackgroundWork: post id " + postId);
-                Call<ListingResponse> call1 = newsService.getNewerPosts(postId, 20);
-                call1.enqueue(new Callback<ListingResponse>() {
-                    @Override
-                    public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
-                        Log.d(TAG, "onResponse: " + response.code());
-                        responseList = response.body().posts;
 
-                        if (!responseList.isEmpty()){
-                            Log.d(TAG, "onResponse: list size " + responseList.size());
+                if (postId != 0){
+                    Call<ListingResponse> call1 = newsService.getNewerPosts(postId, 20);
+                    call1.enqueue(new Callback<ListingResponse>() {
+                        @Override
+                        public void onResponse(Call<ListingResponse> call, Response<ListingResponse> response) {
+                            Log.d(TAG, "onResponse: " + response.code());
+                            responseList = response.body().posts;
 
-                            String content = "";
+                            if (!responseList.isEmpty()){
+                                Log.d(TAG, "onResponse: list size " + responseList.size());
 
-
-                            if (responseList.size() > 5){
-                                for (int i = 0; i < 5; i++){
-
-                                    int finalI = i;
-                                    executor.execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Post post1 = response.body().posts.get(finalI);
-
-                                            postRepository.insertPost(post1);
-                                        }
-                                    });
+                                String content = "";
 
 
+                                if (responseList.size() > 5){
+                                    for (int i = 0; i < 5; i++){
 
-                                    content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                        int finalI = i;
+                                        executor.execute(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Post post1 = response.body().posts.get(finalI);
+
+                                                postRepository.insertPost(post1);
+                                            }
+                                        });
+
+
+
+                                        content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                    }
+                                }else {
+                                    for (int i = 0; i < responseList.size(); i++){
+
+                                        int finalI = i;
+                                        executor.execute(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Post post = response.body().posts.get(finalI);
+
+                                                postRepository.insertPost(post);
+                                            }
+                                        });
+
+
+
+                                        content +=  (i+1) + ". " + responseList.get(i).title + "\n";
+                                    }
                                 }
-                            }else {
-                                for (int i = 0; i < responseList.size(); i++){
 
-                                    int finalI = i;
-                                    executor.execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Post post = response.body().posts.get(finalI);
+                                Log.d(TAG, "onResponse: " + content);
 
-                                            postRepository.insertPost(post);
-                                        }
-                                    });
+                                Intent intent = new Intent(context, MainActivity.class);
 
-
-
-                                    content +=  (i+1) + ". " + responseList.get(i).title + "\n";
-                                }
-                            }
-
-                            Log.d(TAG, "onResponse: " + content);
-
-                            Intent intent = new Intent(context, MainActivity.class);
-
-                            if(preferences.contains(SettingsFragment.KEY_PUSH)){
-                                boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
-                                if(pushIsActive)
-                                    showNotification(context, content, intent);
+                                if(preferences.contains(SettingsFragment.KEY_PUSH)){
+                                    boolean pushIsActive = preferences.getBoolean(SettingsFragment.KEY_PUSH,true);
+                                    if(pushIsActive)
+                                        showNotification(context, content, intent);
 //
+                                }
                             }
+
                         }
 
-                    }
-
-                    @Override
-                    public void onFailure(Call<ListingResponse> call, Throwable t) {
-                        Log.d(TAG, "onFailure: " + t.getCause());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ListingResponse> call, Throwable t) {
+                            Log.d(TAG, "onFailure: " + t.getCause());
+                        }
+                    });
+                }
 
                 Log.d(TAG, "Job Finished: ");
                 jobFinished(params, false);

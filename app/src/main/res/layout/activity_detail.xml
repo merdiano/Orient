@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tpsadvertising.orientnews.ui.DetailActivity"
-    android:id="@+id/view">
+    android:id="@+id/view"
+    android:background="@color/background_material_light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -56,6 +57,11 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/ic_bookmark_border_black_24dp"/>
 
-        app:srcCompat="@drawable/ic_bookmark_border_black_24dp" />
+
+
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

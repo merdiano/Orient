@@ -16,7 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/OrientTheme">
-        <activity android:name=".Main2Activity" />
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
@@ -34,7 +33,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/OrientTheme">
+            android:theme="@style/OrientDetailsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

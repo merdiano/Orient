@@ -114,11 +114,8 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     private Disposable internetDisposable;
     private DrawyerMenuItem allPosts;
 
-
     public static SharedPreferences pref;
     SharedPreferences.Editor editor;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +128,6 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-
 
         try {
             setupDrawyer();
@@ -266,14 +261,6 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         startBackgroundService(this);
 
-//        if (pref.getBoolean("firstrun", true)) {
-//
-//        }
-
-//        setAlarm();
-
-
-
     }
 
 
@@ -296,23 +283,8 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-
-
-
         drawer.addDrawerListener(toggle);
 
-//        Field mDragger = drawer.getClass().getDeclaredField(
-//                "mLeftDragger");//mRightDragger for right obviously
-//        mDragger.setAccessible(true);
-//        ViewDragHelper draggerObj = (ViewDragHelper) mDragger
-//                .get(drawer);
-//
-//        Field mEdgeSize = draggerObj.getClass().getDeclaredField(
-//                "mEdgeSize");
-//        mEdgeSize.setAccessible(true);
-//        int edge = mEdgeSize.getInt(draggerObj)/2;
-//
-//        mEdgeSize.setInt(draggerObj, edge * 5);
         toggle.syncState();
     }
 
@@ -548,10 +520,14 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             public void run() {
                 Post post = new Post();
 
+
+
                 post = viewModel.getLastPost();
 
-                editor.putInt("postid", post.id);
-                editor.apply();
+                Log.d(TAG, "run: " + post.id);
+
+//                editor.putInt("postid", post.id);
+//                editor.apply();
             }
         });
 

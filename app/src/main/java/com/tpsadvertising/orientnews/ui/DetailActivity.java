@@ -49,6 +49,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.r0adkll.slidr.Slidr;
 import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.injectors.PerActivity;
 import com.tpsadvertising.orientnews.room.Post;
@@ -93,6 +94,7 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
     @BindView(android.R.id.empty)ProgressBar loading;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+
 
     float x1, x2, y1, y2;
 
@@ -152,13 +154,15 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
 
                 if (fav){
                     fab.setImageDrawable(getDrawable(R.drawable.ic_bookmark_black_24dp));
+                }else if (!fav){
+                    fab.setImageDrawable(getDrawable(R.drawable.ic_bookmark_border_black_24dp));
                 }else {
                     fab.setImageDrawable(getDrawable(R.drawable.ic_bookmark_border_black_24dp));
                 }
             }
         });
 
-
+        Slidr.attach(this);
 
     }
 
