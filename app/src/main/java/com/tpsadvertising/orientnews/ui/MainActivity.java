@@ -174,12 +174,12 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         viewModel.postListOffline.observe(this, posts -> {
             adapter.submitPosts(posts);
             getLastJobId();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    grid.scrollToPosition(0);
-                }
-            }, 1000);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    grid.scrollToPosition(0);
+//                }
+//            }, 1000);
 
         });
 

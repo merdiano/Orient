@@ -7,12 +7,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.tpsadvertising.orientnews.ui.DetailActivity"
     tools:showIn="@layout/activity_detail"
-    android:id="@+id/myview">
+    android:id="@+id/myview"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detail_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+
         android:paddingBottom="@dimen/padding_normal"
         android:transitionGroup="false"
         app:layout_constraintEnd_toEndOf="parent"

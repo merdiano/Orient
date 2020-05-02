@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ShareCompat;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
@@ -94,6 +95,8 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
     @BindView(android.R.id.empty)ProgressBar loading;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.detail_bg)
+    ConstraintLayout detail_bg;
 
 
     float x1, x2, y1, y2;
@@ -111,6 +114,14 @@ public class DetailActivity extends BaseActivity<DetailActivityViewModel> {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        if(shPrefs.contains(SettingsFragment.KEY_NIGHT_MODE))
+        {
+            boolean nightModeOn = shPrefs.getBoolean(SettingsFragment.KEY_NIGHT_MODE,false);
+            if (nightModeOn){
+                detail_bg.setBackgroundColor(Color.parseColor("#ff292929"));
+            }
+        }
 
         if(shPrefs.contains(SettingsFragment.KEY_FONT_SIZE)){
             String name = shPrefs.getString(SettingsFragment.KEY_FONT_SIZE,"medium_text");
