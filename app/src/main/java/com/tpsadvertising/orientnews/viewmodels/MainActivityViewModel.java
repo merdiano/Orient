@@ -58,9 +58,13 @@ public class MainActivityViewModel extends ViewModel {
                 return postRepository.favoritePosts();
             else
                 return postRepository.postsOfOrient(input);
+
+
         }) ;
 
-        repoResultOffline = Transformations.map(source, input -> postRepository.loadPostsOffline()) ;
+
+        repoResultOffline = Transformations.map(source, input -> postRepository.loadPostsOffline());
+
         //todo map favorites
         postList = Transformations.switchMap(repoResult,input -> input.pagedList);
 

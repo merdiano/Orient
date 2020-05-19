@@ -423,6 +423,12 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
         mappedAds = new HashMap<>();
         submitList(posts);
     }
+
+    public void clear(){
+
+        submitList(null);
+
+    }
     @Override
     public int getItemCount() {
         return super.getItemCount() + (hasExtraRow() ? 1 : 0);
@@ -508,4 +514,6 @@ public class PostListAdapter extends PagedListAdapter<Post,RecyclerView.ViewHold
                     return oldPost.equals(newPost);
                 }
             };
+
+
 }

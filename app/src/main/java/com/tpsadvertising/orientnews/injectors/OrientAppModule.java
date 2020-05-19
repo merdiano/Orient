@@ -15,7 +15,9 @@ import com.tpsadvertising.orientnews.R;
 import com.tpsadvertising.orientnews.api.PushService;
 
 import com.tpsadvertising.orientnews.room.AppDatabase;
+import com.tpsadvertising.orientnews.room.Category;
 import com.tpsadvertising.orientnews.room.PostDao;
+import com.tpsadvertising.orientnews.ui.CategoryActivity;
 import com.tpsadvertising.orientnews.ui.DetailActivity;
 import com.tpsadvertising.orientnews.ui.MainActivity;
 import com.tpsadvertising.orientnews.ui.SearchActivity;
@@ -53,6 +55,10 @@ public abstract class OrientAppModule {
     @PerActivity
     @ContributesAndroidInjector(modules = {MainActivityModule.class,NetworkModule.class})
     abstract MainActivity mainActivityInjector();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = {CategoryActivityModule.class,NetworkModule.class})
+    abstract CategoryActivity categoryActivityInjector();
 
     @PerActivity
     @ContributesAndroidInjector(modules = NetworkModule.class)

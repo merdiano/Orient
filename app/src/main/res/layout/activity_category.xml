@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.tpsadvertising.orientnews.ui.MainActivity">
+
+        <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/OrientTheme.AppBarOverlay"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:fitsSystemWindows="false">-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Plaid.HomeToolbar"
+            android:background="@drawable/bg_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center"
+            app:popupTheme="@style/OrientTheme.PopupOverlay"/>
+
+        <!--</android.support.design.widget.AppBarLayout>-->
+
+
+        <include layout="@layout/content_main" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.mindorks.placeholderview.PlaceHolderView
+        android:id="@+id/drawerView"
+
+        android:layout_width="@dimen/drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:paddingTop="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:elevation="@dimen/z_drawer"
+        android:theme="@style/Widget.Plaid.Navbar"
+        android:clipToPadding="false"
+
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

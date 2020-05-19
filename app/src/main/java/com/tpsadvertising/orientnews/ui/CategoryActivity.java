@@ -21,6 +21,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.core.content.IntentCompat;
 import androidx.customview.widget.ViewDragHelper;
 import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
@@ -82,7 +83,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 @PerActivity
-public class MainActivity extends BaseActivity<MainActivityViewModel>
+public class CategoryActivity extends BaseActivity<MainActivityViewModel>
         implements DrawyerItemCallback{
 
     private static final String TAG = "JobService";
@@ -92,7 +93,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     DrawerLayout drawer;
     @BindView(R.id.drawerView)
     PlaceHolderView mDrawyerView;
-//    @BindView(android.R.id.empty)
+    //    @BindView(android.R.id.empty)
 //    ProgressBar loading;
     @BindView(R.id.grid) RecyclerView grid;
     @BindView(R.id.swipeRefresh)
@@ -117,12 +118,14 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     public static SharedPreferences pref;
     SharedPreferences.Editor editor;
 
+    int categoryId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         loadLocale();
         super.onCreate(savedInstanceState);
         setTheme(R.style.OrientTheme);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_category);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -137,6 +140,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             e.printStackTrace();
         }
 
+        categoryId = getIntent().getIntExtra("id", 0);
 
         editor = pref.edit();
 
@@ -156,7 +160,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 //                viewModel.loadMore();
 //            }
 //        });
-        NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
+        NetworkUtils.checkGooglePlayServicesAvailable(CategoryActivity.this);
 
         viewModel.getCategories().observe(this, new Observer<List<Category>>() {
             @Override
@@ -171,21 +175,14 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             }
         });
 
-        viewModel.postListOffline.observe(this, posts -> {
+
+        viewModel.postList.observe(this, posts -> {
             adapter.submitPosts(posts);
-            getLastJobId();
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    grid.scrollToPosition(0);
-//                }
-//            }, 1000);
-
+            if(viewModel.loadPosts(categoryId)){
+                grid.scrollToPosition(0);
+//                adapter.submitPosts(posts);
+            }
         });
-
-//        viewModel.postList.observe(this, posts -> {
-//            adapter.submitPosts(posts);
-//        });
 
         viewModel.networkState.observe(this, networkState -> {
             adapter.setNetworkState(networkState);
@@ -241,14 +238,18 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
 
         swipeRefreshLayout.setProgressViewOffset(false, 0,250);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> viewModel.postList.observe(MainActivity.this, posts -> {
+            new Handler().postDelayed(() -> viewModel.postList.observe(CategoryActivity.this, posts -> {
                 adapter.submitPosts(posts);
+
+                if(viewModel.loadPosts(categoryId)){
+                    grid.scrollToPosition(0);
+                }
 
                 if(posts.size() != 0)
                     swipeRefreshLayout.setRefreshing(false);
                 else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
                     swipeRefreshLayout.setRefreshing(true);
-                getLastJobId();
+
 
             }), 2000);
 
@@ -261,20 +262,16 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         });
 
 
-        AppRater.app_launched(this);
-
-        startBackgroundService(this);
-
     }
 
 
     private void setupDrawyer() throws NoSuchFieldException, IllegalAccessException {
         allPosts = new DrawyerMenuItem(getApplicationContext(),R.string.all_categories);
-        allPosts.setItemCallback(MainActivity.this);
+        allPosts.setItemCallback(CategoryActivity.this);
         DrawyerMenuItem favorites = new DrawyerMenuItem(getApplicationContext(),R.string.favorite_posts);
         DrawyerMenuItem settings = new DrawyerMenuItem(getApplicationContext(),R.string.action_settings);
-        favorites.setItemCallback(MainActivity.this);
-        settings.setItemCallback(MainActivity.this);
+        favorites.setItemCallback(CategoryActivity.this);
+        settings.setItemCallback(CategoryActivity.this);
         mDrawyerView.addView(allPosts);
         mDrawyerView.addView(favorites);
         mDrawyerView.addView(settings);
@@ -298,7 +295,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         setupDrawyer();
         for(Category cat : categories){
             DrawyerCategoryItem categoryItem = new DrawyerCategoryItem(getApplicationContext(),cat);
-            categoryItem.setItemCallback(MainActivity.this);
+            categoryItem.setItemCallback(CategoryActivity.this);
             mDrawyerView.addViewAfter(allPosts,categoryItem);
         }
     }
@@ -312,7 +309,7 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
     @Override
     protected void onResume() {
         super.onResume();
-        NetworkUtils.checkGooglePlayServicesAvailable(MainActivity.this);
+        NetworkUtils.checkGooglePlayServicesAvailable(CategoryActivity.this);
     }
 
     @Override
@@ -375,7 +372,9 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            finishAffinity();
+            System.exit(0);
         }
     }
 
@@ -399,14 +398,18 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
             refreshBtn.setOnClickListener(view -> {
                 view.startAnimation(rotation);
 
-                new Handler().postDelayed(() -> viewModel.postList.observe(MainActivity.this, posts -> {
+                new Handler().postDelayed(() -> viewModel.postList.observe(CategoryActivity.this, posts -> {
                     adapter.submitPosts(posts);
+
+                    if(viewModel.loadPosts(categoryId)){
+                        grid.scrollToPosition(0);
+                    }
 
                     if(posts.size() != 0)
                         view.clearAnimation();
                     else if(posts.size() == 0 && viewModel.currentSource()!=0 && adapter.getItemCount() ==0)
                         view.startAnimation(rotation);
-                    getLastJobId();
+
 
                 }), 2000);
 
@@ -428,146 +431,29 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
                 //viewModel.loadFavorites();
                 break;
             case  R.string.action_settings:
-                startActivityForResult(new Intent(MainActivity.this,SettingsActivity.class),
+                startActivityForResult(new Intent(CategoryActivity.this,SettingsActivity.class),
                         SettingsActivity.SETTINGS_REQUEST_CODE);
                 break;
         }
     }
 
     @Override
-    public void categoryItemClicked(int categoryId) {
-//        if(viewModel.loadPosts(categoryId)){
-//            grid.scrollToPosition(0);
-//            drawer.closeDrawers();
-//        }
-//        adapter.clear();
-//
-//
-//        viewModel.loadPosts(categoryId);
-//        drawer.closeDrawers();
-//
+    public void categoryItemClicked(int Id) {
 
-//        adapter.clear();
-//        adapter.notifyDataSetChanged();
-//        refresh(categoryId);
+//        Log.d("TAG", "categoryItemClicked: " + );
 
-        drawer.closeDrawers();
-        Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
-        intent.putExtra("id", categoryId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        if (categoryId!=Id) {
 
+            drawer.closeDrawers();
+            Intent intent = new Intent(CategoryActivity.this, CategoryActivity.class);
+            intent.putExtra("id", Id);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
 
     }
 
-    private void refresh(int id){
-        drawer.closeDrawers();
-        viewModel.postList.observe(MainActivity.this, posts -> {
-//            adapter.clear();
-            adapter.submitPosts(posts);
 
-            viewModel.loadPosts(id);
-                grid.scrollToPosition(0);
-
-
-        });
-
-
-    }
-    private void setAlarm() {
-
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        // if it's after or equal 6 am schedule for next day
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 9) {
-            Log.e(TAG, "Alarm will schedule for next day!");
-            calendar.add(Calendar.DAY_OF_YEAR, 1); // add, not set!
-        }
-        else{
-            Log.e(TAG, "Alarm will schedule for today!");
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 6);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        //getting the alarm manager
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        //creating a new intent specifying the broadcast receiver
-        Intent i = new Intent(this, MyAlarm.class);
-        i.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        //creating a pending intent using the intent
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        if (calendar.before(Calendar.getInstance())){
-            calendar.add(Calendar.DATE, 1);
-        }
-
-        //setting the repeating alarm that will be fired every day
-        am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
-
-    }
-
-    private void startBackgroundService(Context context){
-
-        ComponentName componentName = new ComponentName(context, JobService.class);
-//        JobInfo jobInfo = new JobInfo.Builder(123, componentName)
-//                .setRequiresCharging(false)
-//                .setPersisted(true)
-//                .setPeriodic(20 * 60 * 1000)
-//                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                .build();
-        JobInfo jobInfo;
-        int delay = 600 * 60* 1000;
-
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-//            jobInfo = new JobInfo.Builder(123, componentName)
-//                    .setMinimumLatency(delay)
-//                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                    .setPersisted(true)
-//                    .build();
-//        } else {
-
-        jobInfo = new JobInfo.Builder(123, componentName)
-                    .setPeriodic(delay)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPersisted(true)
-                    .build();
-
-
-        JobScheduler jobScheduler = (JobScheduler)context.getApplicationContext().getSystemService(JOB_SCHEDULER_SERVICE);
-        int resultCode = jobScheduler.schedule(jobInfo);
-
-        if (resultCode == JobScheduler.RESULT_SUCCESS){
-            Log.d(TAG, "Job Scheduled");
-//            changeFirstTime();
-        }
-        else {
-            Log.d(TAG, "Job Scheduling failed");
-        }
-    }
-
-    private void getLastJobId(){
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Post post = new Post();
-
-
-
-                post = viewModel.getLastPost();
-
-                Log.d(TAG, "run: " + post.id);
-
-//                editor.putInt("postid", post.id);
-//                editor.apply();
-            }
-        });
-
-    }
 
     private void setLocale(String lang) {
 
@@ -577,21 +463,15 @@ public class MainActivity extends BaseActivity<MainActivityViewModel>
         configuration.locale = locale;
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
 
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(CategoryActivity.this).edit();
         editor.putString("lang", lang);
         editor.apply();
 
     }
     private void loadLocale() {
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        String lang = sharedPreferences.getString("lang", "");
         String lang = Locale.getDefault().getLanguage();
         setLocale(lang);
     }
 
-    private void changeFirstTime(){
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putBoolean("firstrun", false).apply();
-    }
 
 }

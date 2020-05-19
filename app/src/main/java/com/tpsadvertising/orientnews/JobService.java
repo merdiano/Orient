@@ -160,6 +160,7 @@ public class JobService extends android.app.job.JobService {
                                         showNotification(context, content, intent);
 //
                                 }
+
                             }
 
                         }
